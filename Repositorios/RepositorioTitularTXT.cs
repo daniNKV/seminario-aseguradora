@@ -1,5 +1,4 @@
 using Aplicacion;
-using System.Text.Json;
 public class RepositorioTitularTXT: IRepositorioTitular
 {
     readonly string _nombreArchivo = "titulares.txt";
@@ -30,7 +29,7 @@ public class RepositorioTitularTXT: IRepositorioTitular
             {
                 foreach (IAsegurable item in titular.ItemsAsegurados)
                 {   
-                    writer.WriteLine($"- {item}");
+                    writer.WriteLine($"- {item.ToString()}");
                 }
             }
         }
@@ -74,18 +73,21 @@ public class RepositorioTitularTXT: IRepositorioTitular
             string line = reader.ReadLine() ?? "";
             while (!reader.EndOfStream) {
                 Titular titular = new Titular();
-                titular.id = int.Parse(reader.ReadLine().Split(':')[1].Trim());
-                titular.dni = int.Parse(reader.ReadLine().Split(':')[1].Trim());
-                titular.nombre =  reader.ReadLine().Split(':')[1].Trim();
-                titular.apellido =  reader.ReadLine().Split(':')[1].Trim();
-                titular.telefono =  reader.ReadLine().Split(':')[1].Trim();
-                titular.direccion = reader.ReadLine().Split(':')[1].Trim();
-                titular.email = reader.ReadLine().Split(':')[1].Trim();
+                titular.id = int.Parse(reader.ReadLine() ?? "".Split(':')[1].Trim());
+                titular.dni = int.Parse(reader.ReadLine() ?? "".Split(':')[1].Trim());
+                titular.nombre =  reader.ReadLine() ?? "".Split(':')[1].Trim();
+                titular.apellido =  reader.ReadLine() ?? "".Split(':')[1].Trim();
+                titular.telefono =  reader.ReadLine() ?? "".Split(':')[1].Trim();
+                titular.direccion = reader.ReadLine() ?? "".Split(':')[1].Trim();
+                titular.email = reader.ReadLine() ?? "".Split(':')[1].Trim();
                 List<IAsegurable> itemsAsegurados = new List<IAsegurable>();
-                while ((line = reader.ReadLine()) != null && !line.Equals("Titular"))
+                while ((line = reader.ReadLine() ?? "") != null && !line.Equals("Titular"))
                 {
-                    string item = line.Trim().Substring(1);
-                    // itemsAsegurados.Add(new Vehiculo(item)); 
+                    string[] item = line.Split(',');
+                    IAsegurable asegurable = new Vehiculo(item[2], item[3], item[4]);
+                    asegurable.id = int.Parse((item[0]));
+                    asegurable.titularId = int.Parse(item[1]);
+                    itemsAsegurados.Add(asegurable); 
                 }
                 titulares.Add(titular);
             }
@@ -111,7 +113,7 @@ public class RepositorioTitularTXT: IRepositorioTitular
                 {
                     foreach (IAsegurable item in titular.ItemsAsegurados)
                     {
-                        writer.WriteLine($"- {item}");
+                        writer.WriteLine($"- {item.ToString()}");
                     }
                 }
             }
