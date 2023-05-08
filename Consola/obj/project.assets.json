@@ -1,11 +1,49 @@
 {
   "version": 3,
   "targets": {
-    "net7.0": {}
+    "net7.0": {
+      "Aplicacion/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "compile": {
+          "bin/placeholder/Aplicacion.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Aplicacion.dll": {}
+        }
+      },
+      "Repositorios/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "Aplicacion": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Repositorios.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Repositorios.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "Aplicacion/1.0.0": {
+      "type": "project",
+      "path": "../Aplicacion/Aplicacion.csproj",
+      "msbuildProject": "../Aplicacion/Aplicacion.csproj"
+    },
+    "Repositorios/1.0.0": {
+      "type": "project",
+      "path": "../Repositorios/Repositorios.csproj",
+      "msbuildProject": "../Repositorios/Repositorios.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net7.0": []
+    "net7.0": [
+      "Aplicacion >= 1.0.0",
+      "Repositorios >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "/home/dani/.nuget/packages/": {}
@@ -31,7 +69,14 @@
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "/home/dani/facultad/aseguradora/Aplicacion/Aplicacion.csproj": {
+              "projectPath": "/home/dani/facultad/aseguradora/Aplicacion/Aplicacion.csproj"
+            },
+            "/home/dani/facultad/aseguradora/Repositorios/Repositorios.csproj": {
+              "projectPath": "/home/dani/facultad/aseguradora/Repositorios/Repositorios.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
