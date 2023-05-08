@@ -2,9 +2,21 @@ namespace Aplicacion;
 
 public abstract class Persona
 {
-    public string nombre { get; set; } = "Indefinido";
-    public string apellido { get; set; } = "Indefinido";
-    public int dni { get; set; }
-    public int telefono{ get; set; }
+    public string _nombre { get; set; } = "Indefinido";
+    public string _apellido { get; set; } = "Indefinido";
+    public int _dni { get; set; } = -1;
+    public int _telefono{ get; set; } = -1;
+
+    public Persona(int dni, string nombre, string apellido, int telefono) {
+        _dni = dni;
+        _nombre = nombre;
+        _apellido = apellido;
+        _telefono = telefono;
+    }
+    public Persona(int dni, string nombre, string apellido) {
+        _dni = dni;
+        _nombre = nombre;
+        _apellido = apellido;
+    }
 
 }
