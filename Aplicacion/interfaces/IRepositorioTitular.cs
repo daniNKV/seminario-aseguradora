@@ -1,6 +1,6 @@
 namespace Aplicacion;
 
-interface IRepositorioTitular
+public interface IRepositorioTitular: IRepositorio<Titular>
 {
     void AgregarTitular(Titular titular);
     void EliminarTitular(int titularDni);

@@ -1,6 +1,6 @@
 namespace Aplicacion;
 
-interface IRepositorioPoliza
+public interface IRepositorioPoliza: IRepositorio<Poliza>
 {
     void AgregarPoliza(Poliza poliza);
     void EliminarPoliza(int polizaId);
