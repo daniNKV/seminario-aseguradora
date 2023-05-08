@@ -1,6 +1,6 @@
 namespace Aplicacion;
 
-public interface IRepositorioAsegurable: IRepositorio<IAsegurable>
+public interface IRepositorioAsegurable
 {
     void AgregarAsegurable(IAsegurable asegurable);
     void EliminarAsegurable(int asegurableId);
