@@ -6,7 +6,6 @@
 *.user
 *.userosscache
 *.sln.docstates
-
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
@@ -262,3 +261,7 @@ __pycache__/
 *.pyc
 
 .vscode
+
+# Ignore any files in /bin and /obj Folders
+**/bin/*
+**/obj/*
