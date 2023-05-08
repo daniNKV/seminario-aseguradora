@@ -4,69 +4,85 @@ public class RepositorioAsegurableTXT: IRepositorioAsegurable
 {
     readonly string _nombreArchivo = "asegurables.txt";
 
-    public void AgregarAsegurable(IAsegurable asegurable)
+    public void AgregarAsegurable(Vehiculo vehiculo)
     {
-        using var streamWriter = new StreamWriter(_nombreArchivo, true);
-        asegurable.id = IAsegurable.CantidadAsegurados + 1;
-        streamWriter.WriteLine(ConvertirJSON(asegurable));
+        Vehiculo.cantidadAsegurados++;
+        vehiculo.id = Vehiculo.cantidadAsegurados;
+        using (StreamWriter writer = new StreamWriter(_nombreArchivo, true))
+        {
+            writer.WriteLine("Vehiculo");
+            writer.WriteLine($"ID: {vehiculo.id}");
+            writer.WriteLine($"ID Titular: {vehiculo.titularId}");
+            writer.WriteLine($"Dominio: {vehiculo.dominio}");
+            writer.WriteLine($"Marca: {vehiculo.marca}");
+            writer.WriteLine($"Fabricacion: {vehiculo.fabricacion}");
+        }
     }
-
     public void EliminarAsegurable(int id)
     {
-        List<IAsegurable> asegurables = LeerTodas();
+        List<Vehiculo> asegurables = ListarAsegurables();
 
-        IAsegurable? itemAEliminar = asegurables.Find(asegurable => asegurable.id == id);
+        Vehiculo? itemAEliminar = asegurables.Find(asegurable => asegurable.id == id);
         
         if (itemAEliminar != null && asegurables.Remove(itemAEliminar)){
+            EscribirTodos(asegurables);
             Console.WriteLine($"Se ha eliminado al asegurable con ID: {id}");
         } else {
             throw new Exception("No existe asegurable con el id solicitado");
         };
     }
 
-    public void ModificarAsegurable(IAsegurable asegurable) 
+    public void ModificarAsegurable(Vehiculo asegurable) 
     {
-        List<IAsegurable> asegurables = LeerTodas();
-        int indiceAModificar = asegurables.IndexOf(asegurable);
-        if (indiceAModificar != -1) {
+        List<Vehiculo> asegurables = ListarAsegurables();
+        Vehiculo? vehiculoExistente = asegurables.Find(vehiculoGrabado => vehiculoGrabado.id == asegurable.id);
+        if (vehiculoExistente != null) {
+            int indiceAModificar = asegurables.IndexOf(vehiculoExistente);
             asegurables.RemoveAt(indiceAModificar);
             asegurables.Insert(indiceAModificar, asegurable);
-            EscribirTodas(asegurables);
+            EscribirTodos(asegurables);
         }
          else {
             throw new Exception($"No existe asegurable con id = {asegurable.id}");
         };
     }
     
-    public List<IAsegurable> ListarAsegurables()
+    public List<Vehiculo> ListarAsegurables()
     {
-        List<IAsegurable> asegurables = LeerTodas();
+        List<Vehiculo> vehiculos = new List<Vehiculo>();
 
-        return asegurables;
+        using (StreamReader reader = new StreamReader(_nombreArchivo))
+        {
+            string line = reader.ReadLine() ?? "";
+            while (!reader.EndOfStream) {
+                Vehiculo vehiculo = new Vehiculo();
+                vehiculo.id = int.Parse(reader.ReadLine().Split(':')[1].Trim());
+                vehiculo.titularId = int.Parse(reader.ReadLine().Split(':')[1].Trim());
+                vehiculo.dominio = reader.ReadLine().Split(':')[1].Trim();
+                vehiculo.marca = reader.ReadLine().Split(':')[1].Trim();
+                vehiculo.fabricacion= reader.ReadLine().Split(':')[1].Trim();
+
+                reader.ReadLine();
+                vehiculos.Add(vehiculo);
+            }
+        }
+        return vehiculos;
     }
 
-    private List<IAsegurable> LeerTodas()
+        private void EscribirTodos(List<Vehiculo> vehiculos)
     {
-        string asegurablesJson = File.ReadAllText(_nombreArchivo);        
-        List<IAsegurable> asegurables = JsonSerializer.Deserialize<List<IAsegurable>>(asegurablesJson) ?? new List<IAsegurable>();
-        if (asegurables.Count == 0) throw new Exception("No existen titulares en existencia");
-        return asegurables;
+        using (StreamWriter writer = new StreamWriter(_nombreArchivo, false))
+        {
+            foreach(Vehiculo v in vehiculos) {
+                writer.WriteLine("Vehiculo");
+                writer.WriteLine($"ID: {v.id}");
+                writer.WriteLine($"ID Titular: {v.titularId}");
+                writer.WriteLine($"Dominio: {v.dominio}");
+                writer.WriteLine($"Marca: {v.marca}");
+                writer.WriteLine($"Fabricacion: {v.fabricacion}");
+            }
+        }
     }
     
-    private void EscribirTodas(List<IAsegurable> asegurables)
-    {
-        string asegurablesJson = JsonSerializer.Serialize(asegurables);
-        File.WriteAllText(_nombreArchivo, asegurablesJson);
-    
-    }
 
-    private string ConvertirJSON(IAsegurable asegurable) 
-    {
-        return JsonSerializer.Serialize(asegurable);
-    }
-    private IAsegurable? ParseJSON(string JSONObj)
-    {
-        IAsegurable? asegurable = JsonSerializer.Deserialize<IAsegurable>(JSONObj);
-        return asegurable;
-    }
 }

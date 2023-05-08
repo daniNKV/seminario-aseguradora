@@ -31,6 +31,8 @@ public class RepositorioTitularTXT: IRepositorioTitular
                 {   
                     writer.WriteLine($"- {item.ToString()}");
                 }
+            } else {
+                writer.WriteLine("");
             }
         }
     }
@@ -73,18 +75,19 @@ public class RepositorioTitularTXT: IRepositorioTitular
             string line = reader.ReadLine() ?? "";
             while (!reader.EndOfStream) {
                 Titular titular = new Titular();
-                titular.id = int.Parse(reader.ReadLine() ?? "".Split(':')[1].Trim());
-                titular.dni = int.Parse(reader.ReadLine() ?? "".Split(':')[1].Trim());
-                titular.nombre =  reader.ReadLine() ?? "".Split(':')[1].Trim();
-                titular.apellido =  reader.ReadLine() ?? "".Split(':')[1].Trim();
-                titular.telefono =  reader.ReadLine() ?? "".Split(':')[1].Trim();
-                titular.direccion = reader.ReadLine() ?? "".Split(':')[1].Trim();
-                titular.email = reader.ReadLine() ?? "".Split(':')[1].Trim();
+                titular.id = int.Parse(reader.ReadLine().Split(':')[1].Trim());
+                titular.dni = int.Parse(reader.ReadLine().Split(':')[1].Trim());
+                titular.nombre =  reader.ReadLine().Split(':')[1].Trim();
+                titular.apellido =  reader.ReadLine().Split(':')[1].Trim();
+                titular.telefono =  reader.ReadLine().Split(':')[1].Trim();
+                titular.direccion = reader.ReadLine().Split(':')[1].Trim();
+                titular.email = reader.ReadLine().Split(':')[1].Trim();
                 List<IAsegurable> itemsAsegurados = new List<IAsegurable>();
-                while ((line = reader.ReadLine() ?? "") != null && !line.Equals("Titular"))
+                reader.ReadLine();
+                while ((line = reader.ReadLine()) != null  && !line.Equals("Titular"))
                 {
                     string[] item = line.Split(',');
-                    IAsegurable asegurable = new Vehiculo(item[2], item[3], item[4]);
+                    Vehiculo asegurable = new Vehiculo(item[2], item[3], item[4]);
                     asegurable.id = int.Parse((item[0]));
                     asegurable.titularId = int.Parse(item[1]);
                     itemsAsegurados.Add(asegurable); 
