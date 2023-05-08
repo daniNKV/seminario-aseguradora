@@ -2,8 +2,8 @@ namespace Aplicacion;
 
 public interface IRepositorioAsegurable
 {
-    void AgregarAsegurable(IAsegurable asegurable);
+    void AgregarAsegurable(Vehiculo asegurable);
     void EliminarAsegurable(int asegurableId);
-    void ModificarAsegurable(IAsegurable asegurable);
-    List<IAsegurable> ListarAsegurables();
+    void ModificarAsegurable(Vehiculo asegurable);
+    List<Vehiculo> ListarAsegurables();
 }

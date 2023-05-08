@@ -7,12 +7,8 @@ public class ListarAsegurableUseCase
     public ListarAsegurableUseCase(IRepositorioAsegurable repositorio) {
         _repositorio = repositorio;
     }
-    public void Ejecutar()
+    public List<Vehiculo> Ejecutar()
     {
-        try {
-            _repositorio.ListarAsegurables();
-        } catch (Exception e) {
-            Console.WriteLine(e.Message);
-        }
+        return _repositorio.ListarAsegurables();
     }
 }

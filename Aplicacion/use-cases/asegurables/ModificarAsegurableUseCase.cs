@@ -7,7 +7,7 @@ public class ModificarAsegurableUseCase
     public ModificarAsegurableUseCase(IRepositorioAsegurable repositorio) {
         _repositorio = repositorio;
     }
-    public void Ejecutar(IAsegurable asegurable)
+    public void Ejecutar(Vehiculo asegurable)
     {
         try {
             _repositorio.ModificarAsegurable(asegurable);

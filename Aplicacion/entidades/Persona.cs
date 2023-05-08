@@ -2,26 +2,29 @@ namespace Aplicacion;
 
 public abstract class Persona
 {
-    public string _nombre { get; set; } = "Indefinido";
-    public string _apellido { get; set; } = "Indefinido";
-    public int _dni { get; set; } = -1;
-    public int _telefono{ get; set; } = -1;
+    public string nombre { get; set; } = "Indefinido";
+    public string apellido { get; set; } = "Indefinido";
+    public int dni { get; set; } = -1;
+    public string telefono{ get; set; } = "Indefinido";
 
-    public Persona(int dni, string nombre, string apellido, int telefono) {
-        _dni = dni;
-        _nombre = nombre;
-        _apellido = apellido;
-        _telefono = telefono;
+    public Persona() {
+        
+    }
+    public Persona(int dni, string nombre, string apellido, string telefono) {
+        this.dni = dni;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.telefono = telefono;
     }
     public Persona(int dni, string nombre, string apellido) {
-        _dni = dni;
-        _nombre = nombre;
-        _apellido = apellido;
+        this.dni = dni;
+        this.nombre = nombre;
+        this.apellido = apellido;
     }
 
     public override string ToString()
     {
-        return $"{_nombre} {_apellido} {_dni} {_telefono}" ; 
+        return $"{nombre} {apellido} {dni} {telefono}" ; 
     }
 
 }

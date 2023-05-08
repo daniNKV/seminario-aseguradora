@@ -7,12 +7,9 @@ public class ListarPolizasUseCase
     public ListarPolizasUseCase(IRepositorioPoliza repositorio) {
         _repositorio = repositorio;
     }
-    public void Ejecutar()
+    public List<Poliza> Ejecutar()
     {
-        try {
-            _repositorio.ListarPolizas();
-        } catch (Exception e) {
-            Console.WriteLine(e.Message);
-        }
+        return _repositorio.ListarPolizas();
+
     }
 }

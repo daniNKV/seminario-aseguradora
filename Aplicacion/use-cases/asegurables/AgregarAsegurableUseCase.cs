@@ -9,7 +9,7 @@ public class AgregarAsegurableUseCase
         _repositorio = repositorio;
     }
 
-    public void Ejecutar(IAsegurable asegurable)
+    public void Ejecutar(Vehiculo asegurable)
     {
         _repositorio.AgregarAsegurable(asegurable);
     }
