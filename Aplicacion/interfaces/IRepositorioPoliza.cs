@@ -3,7 +3,7 @@ namespace Aplicacion;
 public interface IRepositorioPoliza: IRepositorio<Poliza>
 {
     void AgregarPoliza(Poliza poliza);
-    void EliminarPoliza(int polizaId);
-    void ModificarPoliza(int polizaId);
+    void EliminarPoliza(int id);
+    void ModificarPoliza(Poliza poliza);
     List<Poliza> ListarPolizas();
 }

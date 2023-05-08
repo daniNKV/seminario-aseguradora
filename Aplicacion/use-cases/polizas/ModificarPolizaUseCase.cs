@@ -7,10 +7,10 @@ public class ModificarPolizaUseCase
     public ModificarPolizaUseCase(IRepositorioPoliza repositorio) {
         _repositorio = repositorio;
     }
-    public void Ejecutar(int polizaId)
+    public void Ejecutar(Poliza poliza)
     {
         try {
-            _repositorio.ModificarPoliza(polizaId);
+            _repositorio.ModificarPoliza(poliza);
         } catch (Exception e) {
             Console.WriteLine(e.Message);
         }
