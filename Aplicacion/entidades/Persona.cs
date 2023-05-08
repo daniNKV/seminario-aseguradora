@@ -19,4 +19,9 @@ public abstract class Persona
         _apellido = apellido;
     }
 
+    public override string ToString()
+    {
+        return $"{_nombre} {_apellido} {_dni} {_telefono}" ; 
+    }
+
 }
