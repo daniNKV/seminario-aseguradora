@@ -6,18 +6,30 @@ public class RepositorioPolizaTXT: IRepositorioPoliza
 
     public void AgregarPoliza(Poliza poliza)
     {
-        using var streamWriter = new StreamWriter(_nombreArchivo, true);
-        poliza.id = Poliza.cantidadPolizas + 1;
-        streamWriter.WriteLine(ConvertirJSON(poliza));
+        Poliza.cantidadPolizas++;
+        poliza.id = Poliza.cantidadPolizas;
+        using (StreamWriter writer = new StreamWriter(_nombreArchivo, true))
+        {
+            writer.WriteLine("Poliza");
+            writer.WriteLine($"ID: {poliza.id}");
+            writer.WriteLine($"Cobertura: {poliza.tipoCobertura}");
+            writer.WriteLine($"Franquicia: {poliza.franquicia}");
+            writer.WriteLine($"Valor Asegurado: {poliza.valorAsegurado}");
+            writer.WriteLine($"Inicio Vigencia: {poliza.inicioVigencia}");
+            writer.WriteLine($"Fin Vigencia: {poliza.finVigencia}");
+            writer.WriteLine($"Elemento Asegurado: {poliza.elementoAsegurado?.ToString()}");
+
+        }
     }
 
     public void EliminarPoliza(int polizaId)
     {
-        List<Poliza> polizas = LeerTodas();
+        List<Poliza> polizas = ListarPolizas();
 
         Poliza? itemAEliminar = polizas.Find(poliza => poliza.id == polizaId);
         
         if (itemAEliminar != null && polizas.Remove(itemAEliminar)){
+            EscribirTodas(polizas);
             Console.WriteLine($"Se ha eliminado a la poliza con ID: {polizaId}");
         } else {
             throw new Exception("No existe poliza con el id solicitado");
@@ -26,11 +38,11 @@ public class RepositorioPolizaTXT: IRepositorioPoliza
 
     public void ModificarPoliza(Poliza poliza) 
     {
-        List<Poliza> polizas = LeerTodas();
+        List<Poliza> polizas = ListarPolizas();
+        Poliza? polizaExistente = polizas.Find(polizaGrabada => polizaGrabada.id == poliza.id);
 
-        int indiceAModificar = polizas.IndexOf(poliza);
-
-        if (indiceAModificar != -1) {
+        if (polizaExistente != null) {
+            int indiceAModificar = polizas.IndexOf(polizaExistente);
             polizas.RemoveAt(indiceAModificar);
             polizas.Insert(indiceAModificar, poliza);
             EscribirTodas(polizas);
@@ -41,41 +53,53 @@ public class RepositorioPolizaTXT: IRepositorioPoliza
 
     public List<Poliza> ListarPolizas()
     {
-        List<Poliza> polizas = LeerTodas();
-        
-        return polizas;
-    }
+        List<Poliza> polizas = new List<Poliza>();
 
-    private Poliza? LeerPoliza(StreamReader stream)
-    {
-        Poliza poliza = new Poliza();
-        string polizaJson = stream.ReadLine() ?? "";
-        return ParseJSON(polizaJson);
-    }
-
-    private List<Poliza> LeerTodas()
-    {
-        string polizasJson = File.ReadAllText(_nombreArchivo);        
-        List<Poliza> polizas = JsonSerializer.Deserialize<List<Poliza>>(polizasJson) ?? new List<Poliza>();
-        if (polizas.Count == 0) throw new Exception("No existen polizas en existencia");
+        using (StreamReader reader = new StreamReader(_nombreArchivo))
+        {
+            string line = reader.ReadLine() ?? "";
+            while (!reader.EndOfStream) {
+                Poliza poliza = new Poliza();
+                poliza.id = int.Parse(reader.ReadLine().Split(':')[1].Trim());
+                poliza.tipoCobertura = reader.ReadLine().Split(':')[1].Trim();
+                poliza.franquicia =  Double.Parse(reader.ReadLine().Split(':')[1].Trim());
+                poliza.valorAsegurado =  Double.Parse(reader.ReadLine().Split(':')[1].Trim());
+                poliza.inicioVigencia =  reader.ReadLine().Split(':')[1].Trim();
+                poliza.finVigencia = reader.ReadLine().Split(':')[1].Trim();
+                string asegurado = reader.ReadLine().Split(':')[1].Trim();
+                if (asegurado != null) {
+                    string[] camposAsegurado = asegurado.Split(',');
+                    Vehiculo vehiculo = new Vehiculo();
+                    vehiculo.id = int.Parse(camposAsegurado[0]);
+                    vehiculo.titularId = int.Parse(camposAsegurado[1]);
+                    vehiculo.dominio = camposAsegurado[2];
+                    vehiculo.marca = camposAsegurado[3];
+                    vehiculo.fabricacion = camposAsegurado[4];
+                    poliza.elementoAsegurado = vehiculo;
+                }
+                reader.ReadLine();
+                polizas.Add(poliza);
+            }
+        }
         return polizas;
     }
     
     private void EscribirTodas(List<Poliza> polizas)
     {
-        string polizasJson = JsonSerializer.Serialize(polizas);
-        File.WriteAllText(_nombreArchivo, polizasJson);
-    
+        using (StreamWriter writer = new StreamWriter(_nombreArchivo, false))
+        {
+            foreach(Poliza poliza in polizas) {
+                writer.WriteLine("Poliza");
+                writer.WriteLine($"ID: {poliza.id}");
+                writer.WriteLine($"Cobertura: {poliza.tipoCobertura}");
+                writer.WriteLine($"Franquicia: {poliza.franquicia}");
+                writer.WriteLine($"Valor Asegurado: {poliza.valorAsegurado}");
+                writer.WriteLine($"Inicio Vigencia: {poliza.inicioVigencia}");
+                writer.WriteLine($"Fin Vigencia: {poliza.finVigencia}");
+                writer.WriteLine($"Elemento Asegurado: {poliza.elementoAsegurado?.ToString()}");
+            }
+        }
     }
 
-    private string ConvertirJSON(Poliza poliza) 
-    {
-        return JsonSerializer.Serialize(poliza);
-    }
-    private Poliza? ParseJSON(string JSONObj)
-    {
-        Poliza? poliza = JsonSerializer.Deserialize<Poliza>(JSONObj);
-        return poliza;
-    }
 
 }
