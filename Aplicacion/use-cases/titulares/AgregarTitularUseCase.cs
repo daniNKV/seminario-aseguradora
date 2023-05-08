@@ -11,6 +11,10 @@ public class AgregarTitularUseCase
 
     public void Ejecutar(Titular titular)
     {
-        _repositorio.AgregarTitular(titular);
+        try {
+            _repositorio.AgregarTitular(titular);
+        } catch (Exception e) {
+            Console.WriteLine(e.Message);
+        }
     }
 }

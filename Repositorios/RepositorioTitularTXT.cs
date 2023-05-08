@@ -5,70 +5,116 @@ public class RepositorioTitularTXT: IRepositorioTitular
     readonly string _nombreArchivo = "titulares.txt";
 
     public void AgregarTitular(Titular titular)
-    {
-        using var streamWriter = new StreamWriter(_nombreArchivo, true);
-        titular._id = Titular.cantidadTitulares + 1;
-        streamWriter.WriteLine(ConvertirJSON(titular));
+    {   
+        if (File.Exists(_nombreArchivo))
+        {
+            List<Titular> titulares = ListarTitulares();
+            if (titulares.Exists(titularGrabado => titularGrabado.dni == titular.dni)) {
+                throw new Exception($"Ya existe un titular con DNI {titular.dni}");
+            }
+        }
+        Titular.cantidadTitulares++;
+        titular.id = Titular.cantidadTitulares;
+        using (StreamWriter writer = new StreamWriter(_nombreArchivo, true))
+        {
+            writer.WriteLine("Titular");
+            writer.WriteLine($"ID: {titular.id}");
+            writer.WriteLine($"DNI: {titular.dni}");
+            writer.WriteLine($"Nombre: {titular.nombre}");
+            writer.WriteLine($"Apellido: {titular.apellido}");
+            writer.WriteLine($"Telefono: {titular.telefono}");
+            writer.WriteLine($"Dirección: {titular.direccion}");
+            writer.WriteLine($"Email: {titular.email}");
+            writer.WriteLine("Items asegurados:");
+            if (titular.ItemsAsegurados != null)
+            {
+                foreach (IAsegurable item in titular.ItemsAsegurados)
+                {   
+                    writer.WriteLine($"- {item}");
+                }
+            }
+        }
     }
 
     public void EliminarTitular(int titularId)
     {
-        List<Titular> titulares = LeerTodas();
+        List<Titular> titulares = ListarTitulares();
 
-        Titular? itemAEliminar = titulares.Find(titular => titular._id == titularId);
+        Titular? itemAEliminar = titulares.Find(titular => titular.id == titularId);
         
         if (itemAEliminar != null && titulares.Remove(itemAEliminar)){
+            EscribirTodos(titulares);
             Console.WriteLine($"Se ha eliminado al titular con ID: {titularId}");
         } else {
             throw new Exception("No existe titular con el id solicitado");
         };
     }
 
-    public void ModificarTitular(int titularDni) 
+    public void ModificarTitular(Titular titular) 
     {
-        List<Titular> titulares = LeerTodas();
-        Titular? titular = titulares.Find(titular => titular._dni == titularDni);
-        if (titular != null) {
-            int indiceAModificar = titulares.IndexOf(titular);
-            if (indiceAModificar != -1) {
+        List<Titular> titulares = ListarTitulares();
+        Titular? titularExistente = titulares.Find(titularGrabado => titularGrabado.dni == titular.dni);
+        if (titularExistente != null) {
+            int indiceAModificar = titulares.IndexOf(titularExistente);
                 titulares.RemoveAt(indiceAModificar);
                 titulares.Insert(indiceAModificar, titular);
-                EscribirTodas(titulares);
-            }
+
+                EscribirTodos(titulares);
         } else {
-            throw new Exception($"No existe titular con dni = {titularDni}");
+            throw new Exception($"No existe titular con dni = {titular.dni}");
         };
     }
     
     public List<Titular> ListarTitulares()
     {
-        List<Titular> titulares = LeerTodas();
+        List<Titular> titulares = new List<Titular>();
 
+        using (StreamReader reader = new StreamReader(_nombreArchivo))
+        {
+            string line = reader.ReadLine() ?? "";
+            while (!reader.EndOfStream) {
+                Titular titular = new Titular();
+                titular.id = int.Parse(reader.ReadLine().Split(':')[1].Trim());
+                titular.dni = int.Parse(reader.ReadLine().Split(':')[1].Trim());
+                titular.nombre =  reader.ReadLine().Split(':')[1].Trim();
+                titular.apellido =  reader.ReadLine().Split(':')[1].Trim();
+                titular.telefono =  reader.ReadLine().Split(':')[1].Trim();
+                titular.direccion = reader.ReadLine().Split(':')[1].Trim();
+                titular.email = reader.ReadLine().Split(':')[1].Trim();
+                List<IAsegurable> itemsAsegurados = new List<IAsegurable>();
+                while ((line = reader.ReadLine()) != null && !line.Equals("Titular"))
+                {
+                    string item = line.Trim().Substring(1);
+                    // itemsAsegurados.Add(new Vehiculo(item)); 
+                }
+                titulares.Add(titular);
+            }
+        }
         return titulares;
     }
 
-    private List<Titular> LeerTodas()
+    private void EscribirTodos(List<Titular> titulares)
     {
-        string titularesJson = File.ReadAllText(_nombreArchivo);        
-        List<Titular> titulares = JsonSerializer.Deserialize<List<Titular>>(titularesJson) ?? new List<Titular>();
-        if (titulares.Count == 0) throw new Exception("No existen titulares en existencia");
-        return titulares;
-    }
-    
-    private void EscribirTodas(List<Titular> titular)
-    {
-        string polizasJson = JsonSerializer.Serialize(titular);
-        File.WriteAllText(_nombreArchivo, polizasJson);
-    
-    }
-
-    private string ConvertirJSON(Titular poliza) 
-    {
-        return JsonSerializer.Serialize(poliza);
-    }
-    private Titular? ParseJSON(string JSONObj)
-    {
-        Titular? titular = JsonSerializer.Deserialize<Titular>(JSONObj);
-        return titular;
+        using (StreamWriter writer = new StreamWriter(_nombreArchivo, false))
+        {
+            foreach(Titular titular in titulares) {
+                writer.WriteLine("Titular");
+                writer.WriteLine($"ID: {titular.id}");
+                writer.WriteLine($"DNI: {titular.dni}");
+                writer.WriteLine($"Nombre: {titular.nombre}");
+                writer.WriteLine($"Apellido: {titular.apellido}");
+                writer.WriteLine($"Telefono: {titular.telefono}");
+                writer.WriteLine($"Dirección: {titular.direccion}");
+                writer.WriteLine($"Email: {titular.email}");
+                writer.WriteLine("Items asegurados:");
+                if (titular.ItemsAsegurados != null)
+                {
+                    foreach (IAsegurable item in titular.ItemsAsegurados)
+                    {
+                        writer.WriteLine($"- {item}");
+                    }
+                }
+            }
+        }
     }
 }
