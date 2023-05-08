@@ -72,16 +72,16 @@ public class RepositorioTitularTXT: IRepositorioTitular
 
         using (StreamReader reader = new StreamReader(_nombreArchivo))
         {
-            string line = reader.ReadLine() ?? "";
+            string? line = reader.ReadLine() ?? "";
             while (!reader.EndOfStream) {
                 Titular titular = new Titular();
-                titular.id = int.Parse(reader.ReadLine().Split(':')[1].Trim());
-                titular.dni = int.Parse(reader.ReadLine().Split(':')[1].Trim());
-                titular.nombre =  reader.ReadLine().Split(':')[1].Trim();
-                titular.apellido =  reader.ReadLine().Split(':')[1].Trim();
-                titular.telefono =  reader.ReadLine().Split(':')[1].Trim();
-                titular.direccion = reader.ReadLine().Split(':')[1].Trim();
-                titular.email = reader.ReadLine().Split(':')[1].Trim();
+                titular.id = int.Parse(reader.ReadLine()?.Split(':')[1].Trim() ?? "0");
+                titular.dni = int.Parse(reader.ReadLine()?.Split(':')[1].Trim() ?? "0");
+                titular.nombre =  reader.ReadLine()?.Split(':')[1].Trim() ?? "";
+                titular.apellido =  reader.ReadLine()?.Split(':')[1].Trim() ?? "";
+                titular.telefono =  reader.ReadLine()?.Split(':')[1].Trim() ?? "";
+                titular.direccion = reader.ReadLine()?.Split(':')[1].Trim() ?? "";
+                titular.email = reader.ReadLine()?.Split(':')[1].Trim() ?? "";
                 List<IAsegurable> itemsAsegurados = new List<IAsegurable>();
                 reader.ReadLine();
                 while ((line = reader.ReadLine()) != null  && !line.Equals("Titular"))

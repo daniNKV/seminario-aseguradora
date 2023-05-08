@@ -56,11 +56,11 @@ public class RepositorioAsegurableTXT: IRepositorioAsegurable
             string line = reader.ReadLine() ?? "";
             while (!reader.EndOfStream) {
                 Vehiculo vehiculo = new Vehiculo();
-                vehiculo.id = int.Parse(reader.ReadLine().Split(':')[1].Trim());
-                vehiculo.titularId = int.Parse(reader.ReadLine().Split(':')[1].Trim());
-                vehiculo.dominio = reader.ReadLine().Split(':')[1].Trim();
-                vehiculo.marca = reader.ReadLine().Split(':')[1].Trim();
-                vehiculo.fabricacion= reader.ReadLine().Split(':')[1].Trim();
+                vehiculo.id = int.Parse(reader.ReadLine()?.Split(':')[1].Trim() ?? "0");
+                vehiculo.titularId = int.Parse(reader.ReadLine()?.Split(':')[1].Trim() ?? "0");
+                vehiculo.dominio = reader.ReadLine()?.Split(':')[1].Trim() ?? "";
+                vehiculo.marca = reader.ReadLine()?.Split(':')[1].Trim() ?? "";
+                vehiculo.fabricacion= reader.ReadLine()?.Split(':')[1].Trim() ?? "";
 
                 reader.ReadLine();
                 vehiculos.Add(vehiculo);

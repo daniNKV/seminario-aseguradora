@@ -60,13 +60,13 @@ public class RepositorioPolizaTXT: IRepositorioPoliza
             string line = reader.ReadLine() ?? "";
             while (!reader.EndOfStream) {
                 Poliza poliza = new Poliza();
-                poliza.id = int.Parse(reader.ReadLine().Split(':')[1].Trim());
-                poliza.tipoCobertura = reader.ReadLine().Split(':')[1].Trim();
-                poliza.franquicia =  Double.Parse(reader.ReadLine().Split(':')[1].Trim());
-                poliza.valorAsegurado =  Double.Parse(reader.ReadLine().Split(':')[1].Trim());
-                poliza.inicioVigencia =  reader.ReadLine().Split(':')[1].Trim();
-                poliza.finVigencia = reader.ReadLine().Split(':')[1].Trim();
-                string asegurado = reader.ReadLine().Split(':')[1].Trim();
+                poliza.id = int.Parse(reader.ReadLine()?.Split(':')[1].Trim() ?? "0");
+                poliza.tipoCobertura = reader.ReadLine()?.Split(':')[1].Trim() ?? "";
+                poliza.franquicia =  Double.Parse(reader.ReadLine()?.Split(':')[1].Trim() ?? "0.0");
+                poliza.valorAsegurado =  Double.Parse(reader.ReadLine()?.Split(':')[1].Trim() ?? "0.0");
+                poliza.inicioVigencia =  reader.ReadLine()?.Split(':')[1].Trim() ?? "";
+                poliza.finVigencia = reader.ReadLine()?.Split(':')[1].Trim() ?? "";
+                string asegurado = reader.ReadLine()?.Split(':')[1].Trim() ?? "";
                 if (asegurado != null) {
                     string[] camposAsegurado = asegurado.Split(',');
                     Vehiculo vehiculo = new Vehiculo();
