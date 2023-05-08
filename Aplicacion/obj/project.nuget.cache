@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "TbyupPtG3EHfoEIWOCMVWs8jKhXjbCwslbLywzq6QLtH8gsnybTGeQtrc1lQx1Chgv5Zxp8pisEayc1nHZumPg==",
+  "dgSpecHash": "iGgivtTJHMNL7Fxt7F/PyhMwQG7cx/zuKLfEMFEAmhDRohNxmyeNnMDEb2TYVrGdoir/QoZIOEPW21adVf0m4A==",
   "success": true,
-  "projectFilePath": "/home/dani/facultad/aseguradora/Aplicacion/Aplicacion.csproj",
+  "projectFilePath": "/home/dani/facultad/seminario-aseguradora/Aplicacion/Aplicacion.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

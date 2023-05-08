@@ -2,7 +2,7 @@ namespace Aplicacion;
 
 public class Titular: Persona {
     public static int cantidadTitulares { get; set; } = 0;
-    private int _id { get; set; }
+    public int _id { get; set; }
     public string _direccion { get; set; } = "Indefinido";
     public List<IAsegurable>? _asegurados { get; set; }
 
