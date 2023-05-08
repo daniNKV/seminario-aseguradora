@@ -5,5 +5,5 @@ interface IRepositorioPoliza
     void AgregarPoliza(Poliza poliza);
     void EliminarPoliza(int polizaId);
     void ModificarPoliza(int polizaId);
-    List<IAsegurable> ListarPolizas();
+    List<Poliza> ListarPolizas();
 }
