@@ -3,16 +3,13 @@ using Aplicacion.Interfaces;
 
 namespace Aplicacion.UseCases.Asegurables;
 
-public class AgregarAsegurableUseCase
+public class AgregarAsegurableUseCase : AsegurableUseCase
 {
-    private readonly IRepositorioAsegurable _repositorio;
-
-    public AgregarAsegurableUseCase(IRepositorioAsegurable repositorio) {
-        _repositorio = repositorio;
+    public AgregarAsegurableUseCase(IRepositorioAsegurable repositorio) : base(repositorio){
     }
 
     public void Ejecutar(Vehiculo asegurable)
-    {
-        _repositorio.AgregarAsegurable(asegurable);
+    { 
+        Repositorio.AgregarAsegurable(asegurable);
     }
 }

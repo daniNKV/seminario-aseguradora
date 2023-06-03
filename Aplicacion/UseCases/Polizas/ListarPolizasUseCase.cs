@@ -3,15 +3,13 @@ using Aplicacion.Interfaces;
 
 namespace Aplicacion.UseCases.Polizas;
 
-public class ListarPolizasUseCase
+public class ListarPolizasUseCase : PolizaUseCase
 {
-    private readonly IRepositorioPoliza _repositorio;
-    public ListarPolizasUseCase(IRepositorioPoliza repositorio) {
-        _repositorio = repositorio;
+    public ListarPolizasUseCase(IRepositorioPoliza repositorio) : base(repositorio) {
     }
     public List<Poliza> Ejecutar()
     {
-        return _repositorio.ListarPolizas();
+        return Repositorio.ListarPolizas();
 
     }
 }

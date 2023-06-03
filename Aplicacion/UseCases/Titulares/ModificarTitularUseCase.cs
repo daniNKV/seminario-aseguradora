@@ -4,16 +4,14 @@ using Aplicacion.Interfaces;
 
 namespace Aplicacion.UseCases.Titulares;
 
-public class ModificarTitularUseCase
+public class ModificarTitularUseCase : TitularUseCase
 {
-    private readonly IRepositorioTitular _repositorio;
-    public ModificarTitularUseCase(IRepositorioTitular repositorio) {
-        _repositorio = repositorio;
+    public ModificarTitularUseCase(IRepositorioTitular repositorio) : base(repositorio) {
     }
     public void Ejecutar(Titular titular)
     {
         try {
-            _repositorio.ModificarTitular(titular);
+            Repositorio.ModificarTitular(titular);
         } catch (Exception e) {
             Console.WriteLine(e.Message);
         }

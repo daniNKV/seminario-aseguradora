@@ -3,16 +3,15 @@ using Aplicacion.Interfaces;
 
 namespace Aplicacion.UseCases.Polizas;
 
-public class EliminarPolizaUseCase
+public class EliminarPolizaUseCase : PolizaUseCase
 {
-    private readonly IRepositorioPoliza _repositorio;
-    public EliminarPolizaUseCase(IRepositorioPoliza repositorio) {
-        _repositorio = repositorio;
+    public EliminarPolizaUseCase(IRepositorioPoliza repositorio) : base(repositorio)
+    {
     }
     public void Ejecutar(int polizaId)
     {
         try {
-            _repositorio.EliminarPoliza(polizaId);
+            Repositorio.EliminarPoliza(polizaId);
         } catch (Exception e) {
             Console.WriteLine(e.Message);
         }

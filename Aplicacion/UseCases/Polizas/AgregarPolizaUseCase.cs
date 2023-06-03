@@ -3,16 +3,13 @@ using Aplicacion.Interfaces;
 
 namespace Aplicacion.UseCases.Polizas;
 
-public class AgregarPolizaUseCase
+public class AgregarPolizaUseCase : PolizaUseCase
 {
-    private readonly IRepositorioPoliza _repositorio;
-
-    public AgregarPolizaUseCase(IRepositorioPoliza repositorio) {
-        _repositorio = repositorio;
+    public AgregarPolizaUseCase(IRepositorioPoliza repositorio) : base(repositorio)
+    {
     }
-
     public void Ejecutar(Poliza poliza)
     {
-        _repositorio.AgregarPoliza(poliza);
+        Repositorio.AgregarPoliza(poliza);
     }
 }

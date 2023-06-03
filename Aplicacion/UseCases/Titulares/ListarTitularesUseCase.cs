@@ -3,15 +3,14 @@ using Aplicacion.Interfaces;
 
 namespace Aplicacion.UseCases.Titulares;
 
-public class ListarTitularesUseCase
+public class ListarTitularesUseCase : TitularUseCase
 {
     private readonly IRepositorioTitular _repositorio;
-    public ListarTitularesUseCase(IRepositorioTitular repositorio) {
-        _repositorio = repositorio;
+    public ListarTitularesUseCase(IRepositorioTitular repositorio) : base(repositorio) {
     }
     public List<Titular> Ejecutar()
     {
-        return _repositorio.ListarTitulares();
+        return Repositorio.ListarTitulares();
 
     }
 }
