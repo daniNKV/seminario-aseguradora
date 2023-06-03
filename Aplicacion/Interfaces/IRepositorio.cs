@@ -1,4 +1,4 @@
-namespace Aplicacion;
+namespace Aplicacion.Interfaces;
 
 public interface IRepositorio<T>
 {

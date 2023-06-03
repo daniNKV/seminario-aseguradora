@@ -1,5 +1,8 @@
 
-namespace Aplicacion;
+using Aplicacion.Entidades;
+using Aplicacion.Interfaces;
+
+namespace Aplicacion.UseCases.Titulares;
 
 public class ModificarTitularUseCase
 {

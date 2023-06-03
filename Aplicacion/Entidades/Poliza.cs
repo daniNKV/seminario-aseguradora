@@ -1,4 +1,8 @@
-namespace Aplicacion;
+
+namespace Aplicacion.Entidades;
+
+using Interfaces;
+
 public enum Cobertura {
     ResponsabilidadCivil,
     TodoRiesgo

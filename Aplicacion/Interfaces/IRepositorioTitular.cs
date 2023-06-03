@@ -1,5 +1,5 @@
-namespace Aplicacion;
-
+namespace Aplicacion.Interfaces;
+using Entidades;
 public interface IRepositorioTitular
 {
     void AgregarTitular(Titular titular);

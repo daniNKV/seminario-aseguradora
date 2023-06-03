@@ -1,4 +1,6 @@
-using Aplicacion;
+using Aplicacion.Entidades;
+using Aplicacion.Interfaces;
+
 public class RepositorioTitularTXT: IRepositorioTitular
 {
     readonly string _nombreArchivo = "titulares.txt";

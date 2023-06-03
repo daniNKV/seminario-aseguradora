@@ -1,5 +1,7 @@
 
-namespace Aplicacion;
+using Aplicacion.Interfaces;
+
+namespace Aplicacion.UseCases.Titulares;
 
 public class EliminarTitularUseCase
 {

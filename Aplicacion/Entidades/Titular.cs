@@ -1,4 +1,4 @@
-namespace Aplicacion;
+namespace Aplicacion.Entidades;
 
 public class Titular: Persona {
     public static int cantidadTitulares { get; set; } = 0;

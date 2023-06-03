@@ -1,5 +1,7 @@
+using Aplicacion.Entidades;
+using Aplicacion.Interfaces;
 
-namespace Aplicacion;
+namespace Aplicacion.UseCases.Titulares;
 
 public class ListarTitularesUseCase
 {

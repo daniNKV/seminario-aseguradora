@@ -1,4 +1,6 @@
-namespace Aplicacion;
+namespace Aplicacion.Entidades;
+
+using Interfaces;
 
 public class Vehiculo: IAsegurable
 {

@@ -1,4 +1,4 @@
-namespace Aplicacion;
+namespace Aplicacion.Entidades;
 
 public class Siniestro
 {

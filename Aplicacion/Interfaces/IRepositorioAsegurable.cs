@@ -1,4 +1,5 @@
-namespace Aplicacion;
+namespace Aplicacion.Interfaces;
+using Entidades;
 
 public interface IRepositorioAsegurable
 {

@@ -1,5 +1,5 @@
-namespace Aplicacion;
-
+namespace Aplicacion.Interfaces;
+using Entidades;
 public interface IRepositorioPoliza
 {
     void AgregarPoliza(Poliza poliza);

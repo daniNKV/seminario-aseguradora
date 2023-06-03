@@ -1,5 +1,5 @@
-using Aplicacion;
-using System.Text.Json;
+using Aplicacion.Entidades;
+using Aplicacion.Interfaces;
 public class RepositorioAsegurableTXT: IRepositorioAsegurable
 {
     readonly string _nombreArchivo = "asegurables.txt";

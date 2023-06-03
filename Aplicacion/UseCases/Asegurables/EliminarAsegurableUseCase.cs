@@ -1,5 +1,6 @@
+using Aplicacion.Interfaces;
 
-namespace Aplicacion;
+namespace Aplicacion.UseCases.Asegurables;
 
 public class EliminarAsegurableUseCase
 {
