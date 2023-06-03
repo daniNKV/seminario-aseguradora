@@ -1,4 +1,8 @@
-﻿using Aplicacion;
+﻿using Aplicacion.Entidades;
+using Aplicacion.Interfaces;
+using Aplicacion.UseCases.Asegurables;
+using Aplicacion.UseCases.Polizas;
+using Aplicacion.UseCases.Titulares;
 
 //Inyección de dependencias a casos de usos de Titular
 IRepositorioTitular repoTitular = new RepositorioTitularTXT();
