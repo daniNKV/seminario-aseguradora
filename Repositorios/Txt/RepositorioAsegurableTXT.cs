@@ -6,23 +6,23 @@ public class RepositorioAsegurableTXT: IRepositorioAsegurable
 
     public void AgregarAsegurable(Vehiculo vehiculo)
     {
-        Vehiculo.cantidadAsegurados++;
-        vehiculo.id = Vehiculo.cantidadAsegurados;
+        Vehiculo.CantidadAsegurados++;
+        vehiculo.Id = Vehiculo.CantidadAsegurados;
         using (StreamWriter writer = new StreamWriter(_nombreArchivo, true))
         {
             writer.WriteLine("Vehiculo");
-            writer.WriteLine($"ID: {vehiculo.id}");
-            writer.WriteLine($"ID Titular: {vehiculo.titularId}");
-            writer.WriteLine($"Dominio: {vehiculo.dominio}");
-            writer.WriteLine($"Marca: {vehiculo.marca}");
-            writer.WriteLine($"Fabricacion: {vehiculo.fabricacion}");
+            writer.WriteLine($"ID: {vehiculo.Id}");
+            writer.WriteLine($"ID Titular: {vehiculo.TitularId}");
+            writer.WriteLine($"Dominio: {vehiculo.Dominio}");
+            writer.WriteLine($"Marca: {vehiculo.Marca}");
+            writer.WriteLine($"Fabricacion: {vehiculo.Fabricacion}");
         }
     }
     public void EliminarAsegurable(int id)
     {
         List<Vehiculo> asegurables = ListarAsegurables();
 
-        Vehiculo? itemAEliminar = asegurables.Find(asegurable => asegurable.id == id);
+        Vehiculo? itemAEliminar = asegurables.Find(asegurable => asegurable.Id == id);
         
         if (itemAEliminar != null && asegurables.Remove(itemAEliminar)){
             EscribirTodos(asegurables);
@@ -35,7 +35,7 @@ public class RepositorioAsegurableTXT: IRepositorioAsegurable
     public void ModificarAsegurable(Vehiculo asegurable) 
     {
         List<Vehiculo> asegurables = ListarAsegurables();
-        Vehiculo? vehiculoExistente = asegurables.Find(vehiculoGrabado => vehiculoGrabado.id == asegurable.id);
+        Vehiculo? vehiculoExistente = asegurables.Find(vehiculoGrabado => vehiculoGrabado.Id == asegurable.Id);
         if (vehiculoExistente != null) {
             int indiceAModificar = asegurables.IndexOf(vehiculoExistente);
             asegurables.RemoveAt(indiceAModificar);
@@ -43,7 +43,7 @@ public class RepositorioAsegurableTXT: IRepositorioAsegurable
             EscribirTodos(asegurables);
         }
          else {
-            throw new Exception($"No existe asegurable con id = {asegurable.id}");
+            throw new Exception($"No existe asegurable con id = {asegurable.Id}");
         };
     }
     
@@ -56,11 +56,11 @@ public class RepositorioAsegurableTXT: IRepositorioAsegurable
             string line = reader.ReadLine() ?? "";
             while (!reader.EndOfStream) {
                 Vehiculo vehiculo = new Vehiculo();
-                vehiculo.id = int.Parse(reader.ReadLine()?.Split(':')[1].Trim() ?? "0");
-                vehiculo.titularId = int.Parse(reader.ReadLine()?.Split(':')[1].Trim() ?? "0");
-                vehiculo.dominio = reader.ReadLine()?.Split(':')[1].Trim() ?? "";
-                vehiculo.marca = reader.ReadLine()?.Split(':')[1].Trim() ?? "";
-                vehiculo.fabricacion= reader.ReadLine()?.Split(':')[1].Trim() ?? "";
+                vehiculo.Id = int.Parse(reader.ReadLine()?.Split(':')[1].Trim() ?? "0");
+                vehiculo.TitularId = int.Parse(reader.ReadLine()?.Split(':')[1].Trim() ?? "0");
+                vehiculo.Dominio = reader.ReadLine()?.Split(':')[1].Trim() ?? "";
+                vehiculo.Marca = reader.ReadLine()?.Split(':')[1].Trim() ?? "";
+                vehiculo.Fabricacion= reader.ReadLine()?.Split(':')[1].Trim() ?? "";
 
                 reader.ReadLine();
                 vehiculos.Add(vehiculo);
@@ -75,11 +75,11 @@ public class RepositorioAsegurableTXT: IRepositorioAsegurable
         {
             foreach(Vehiculo v in vehiculos) {
                 writer.WriteLine("Vehiculo");
-                writer.WriteLine($"ID: {v.id}");
-                writer.WriteLine($"ID Titular: {v.titularId}");
-                writer.WriteLine($"Dominio: {v.dominio}");
-                writer.WriteLine($"Marca: {v.marca}");
-                writer.WriteLine($"Fabricacion: {v.fabricacion}");
+                writer.WriteLine($"ID: {v.Id}");
+                writer.WriteLine($"ID Titular: {v.TitularId}");
+                writer.WriteLine($"Dominio: {v.Dominio}");
+                writer.WriteLine($"Marca: {v.Marca}");
+                writer.WriteLine($"Fabricacion: {v.Fabricacion}");
             }
         }
     }
