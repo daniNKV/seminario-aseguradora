@@ -4,7 +4,7 @@ public class RepositorioAsegurableTXT: IRepositorioAsegurable
 {
     readonly string _nombreArchivo = "asegurables.txt";
 
-    public void AgregarAsegurable(Vehiculo vehiculo)
+    public void Agregar(Vehiculo vehiculo)
     {
         Vehiculo.CantidadAsegurados++;
         vehiculo.Id = Vehiculo.CantidadAsegurados;
@@ -18,9 +18,9 @@ public class RepositorioAsegurableTXT: IRepositorioAsegurable
             writer.WriteLine($"Fabricacion: {vehiculo.Fabricacion}");
         }
     }
-    public void EliminarAsegurable(int id)
+    public void Eliminar(int id)
     {
-        List<Vehiculo> asegurables = ListarAsegurables();
+        List<Vehiculo> asegurables = Listar();
 
         Vehiculo? itemAEliminar = asegurables.Find(asegurable => asegurable.Id == id);
         
@@ -32,9 +32,9 @@ public class RepositorioAsegurableTXT: IRepositorioAsegurable
         };
     }
 
-    public void ModificarAsegurable(Vehiculo asegurable) 
+    public void Modificar(Vehiculo asegurable) 
     {
-        List<Vehiculo> asegurables = ListarAsegurables();
+        List<Vehiculo> asegurables = Listar();
         Vehiculo? vehiculoExistente = asegurables.Find(vehiculoGrabado => vehiculoGrabado.Id == asegurable.Id);
         if (vehiculoExistente != null) {
             int indiceAModificar = asegurables.IndexOf(vehiculoExistente);
@@ -42,12 +42,12 @@ public class RepositorioAsegurableTXT: IRepositorioAsegurable
             asegurables.Insert(indiceAModificar, asegurable);
             EscribirTodos(asegurables);
         }
-         else {
+        else {
             throw new Exception($"No existe asegurable con id = {asegurable.Id}");
         };
     }
     
-    public List<Vehiculo> ListarAsegurables()
+    public List<Vehiculo> Listar()
     {
         List<Vehiculo> vehiculos = new List<Vehiculo>();
 

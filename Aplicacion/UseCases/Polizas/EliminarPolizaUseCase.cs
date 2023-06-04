@@ -1,9 +1,10 @@
 
+using Aplicacion.Entidades;
 using Aplicacion.Interfaces;
 
 namespace Aplicacion.UseCases.Polizas;
 
-public class EliminarPolizaUseCase : PolizaUseCase
+public class EliminarPolizaUseCase : UseCase<IRepositorioPoliza>
 {
     public EliminarPolizaUseCase(IRepositorioPoliza repositorio) : base(repositorio)
     {
@@ -11,7 +12,7 @@ public class EliminarPolizaUseCase : PolizaUseCase
     public void Ejecutar(int polizaId)
     {
         try {
-            Repositorio.EliminarPoliza(polizaId);
+            Repositorio.Eliminar(polizaId);
         } catch (Exception e) {
             Console.WriteLine(e.Message);
         }

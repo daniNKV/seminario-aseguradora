@@ -5,11 +5,11 @@ public class RepositorioTitularTXT: IRepositorioTitular
 {
     readonly string _nombreArchivo = "titulares.txt";
 
-    public void AgregarTitular(Titular titular)
+    public void Agregar(Titular titular)
     {   
         if (File.Exists(_nombreArchivo))
         {
-            List<Titular> titulares = ListarTitulares();
+            List<Titular> titulares = Listar();
             if (titulares.Exists(titularGrabado => titularGrabado.Dni == titular.Dni)) {
                 throw new Exception($"Ya existe un titular con DNI {titular.Dni}");
             }
@@ -39,9 +39,9 @@ public class RepositorioTitularTXT: IRepositorioTitular
         }
     }
 
-    public void EliminarTitular(int titularId)
+    public void Eliminar(int titularId)
     {
-        List<Titular> titulares = ListarTitulares();
+        List<Titular> titulares = Listar();
 
         Titular? itemAEliminar = titulares.Find(titular => titular.Id == titularId);
         
@@ -53,9 +53,9 @@ public class RepositorioTitularTXT: IRepositorioTitular
         };
     }
 
-    public void ModificarTitular(Titular titular) 
+    public void Modificar(Titular titular) 
     {
-        List<Titular> titulares = ListarTitulares();
+        List<Titular> titulares = Listar();
         Titular? titularExistente = titulares.Find(titularGrabado => titularGrabado.Dni == titular.Dni);
         if (titularExistente != null) {
             int indiceAModificar = titulares.IndexOf(titularExistente);
@@ -68,7 +68,7 @@ public class RepositorioTitularTXT: IRepositorioTitular
         };
     }
     
-    public List<Titular> ListarTitulares()
+    public List<Titular> Listar()
     {
         List<Titular> titulares = new List<Titular>();
 

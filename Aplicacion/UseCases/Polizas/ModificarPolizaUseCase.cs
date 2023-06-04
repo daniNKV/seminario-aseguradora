@@ -3,14 +3,14 @@ using Aplicacion.Interfaces;
 
 namespace Aplicacion.UseCases.Polizas;
 
-public class ModificarPolizaUseCase : PolizaUseCase
+public class ModificarPolizaUseCase : UseCase<IRepositorioPoliza>
 {
     public ModificarPolizaUseCase(IRepositorioPoliza repositorio) : base(repositorio) {
     }
     public void Ejecutar(Poliza poliza)
     {
         try {
-            Repositorio.ModificarPoliza(poliza);
+            Repositorio.Modificar(poliza);
         } catch (Exception e) {
             Console.WriteLine(e.Message);
         }

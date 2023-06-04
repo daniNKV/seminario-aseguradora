@@ -3,12 +3,12 @@ using Aplicacion.Interfaces;
 
 namespace Aplicacion.UseCases.Asegurables;
 
-public class ListarAsegurableUseCase : AsegurableUseCase
+public class ListarAsegurableUseCase : UseCase<IRepositorioAsegurable>
 {
     public ListarAsegurableUseCase(IRepositorioAsegurable repositorio) : base(repositorio) {
     }
     public List<Vehiculo> Ejecutar()
     {
-        return Repositorio.ListarAsegurables();
+        return Repositorio.Listar();
     }
 }

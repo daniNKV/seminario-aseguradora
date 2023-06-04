@@ -1,16 +1,15 @@
-
 using Aplicacion.Interfaces;
 
 namespace Aplicacion.UseCases.Titulares;
 
-public class EliminarTitularUseCase : TitularUseCase
+public class EliminarTitularUseCase : UseCase<IRepositorioTitular>
 {
     public EliminarTitularUseCase(IRepositorioTitular repositorio) : base(repositorio){
     }
     public void Ejecutar(int titularId)
     {
         try {
-            Repositorio.EliminarTitular(titularId);
+            Repositorio.Eliminar(titularId);
         } catch (Exception e) {
             Console.WriteLine(e.Message);
         }

@@ -1,10 +1,6 @@
 namespace Aplicacion.Interfaces;
 using Entidades;
-public interface IRepositorioSiniestro
+public interface IRepositorioSiniestro : IRepositorio<Siniestro>
 {
-    void AgregarSiniestro(Siniestro siniestro);
-    void EliminarSiniestro(int id);
-    void ModificarSiniestro(Siniestro siniestro);
-    List<Siniestro> ListarSiniestros();
-    List<Tercero> ListarTerceros(Siniestro siniestro);
+    List<Tercero> Listar(Siniestro siniestro);
 }

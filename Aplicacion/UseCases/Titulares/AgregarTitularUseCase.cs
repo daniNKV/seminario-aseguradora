@@ -3,7 +3,7 @@ using Aplicacion.Interfaces;
 
 namespace Aplicacion.UseCases.Titulares;
 
-public class AgregarTitularUseCase : TitularUseCase
+public class AgregarTitularUseCase : UseCase<IRepositorioTitular>
 {
 
     public AgregarTitularUseCase(IRepositorioTitular repositorio) : base(repositorio) {
@@ -12,7 +12,7 @@ public class AgregarTitularUseCase : TitularUseCase
     public void Ejecutar(Titular titular)
     {
         try {
-            Repositorio.AgregarTitular(titular);
+            Repositorio.Agregar(titular);
         } catch (Exception e) {
             Console.WriteLine(e.Message);
         }

@@ -5,7 +5,7 @@ public class RepositorioPolizaTXT: IRepositorioPoliza
 {
     readonly string _nombreArchivo = "polizas.txt";
 
-    public void AgregarPoliza(Poliza poliza)
+    public void Agregar(Poliza poliza)
     {
         Poliza.CantidadPolizas++;
         poliza.Id = Poliza.CantidadPolizas;
@@ -23,9 +23,9 @@ public class RepositorioPolizaTXT: IRepositorioPoliza
         }
     }
 
-    public void EliminarPoliza(int polizaId)
+    public void Eliminar(int polizaId)
     {
-        List<Poliza> polizas = ListarPolizas();
+        List<Poliza> polizas = Listar();
 
         Poliza? itemAEliminar = polizas.Find(poliza => poliza.Id == polizaId);
         
@@ -37,9 +37,9 @@ public class RepositorioPolizaTXT: IRepositorioPoliza
         };
     }
 
-    public void ModificarPoliza(Poliza poliza) 
+    public void Modificar(Poliza poliza) 
     {
-        List<Poliza> polizas = ListarPolizas();
+        List<Poliza> polizas = Listar();
         Poliza? polizaExistente = polizas.Find(polizaGrabada => polizaGrabada.Id == poliza.Id);
 
         if (polizaExistente != null) {
@@ -52,7 +52,7 @@ public class RepositorioPolizaTXT: IRepositorioPoliza
         }
     }
 
-    public List<Poliza> ListarPolizas()
+    public List<Poliza> Listar()
     {
         List<Poliza> polizas = new List<Poliza>();
 

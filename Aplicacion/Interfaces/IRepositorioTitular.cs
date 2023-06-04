@@ -1,9 +1,5 @@
 namespace Aplicacion.Interfaces;
 using Entidades;
-public interface IRepositorioTitular
+public interface IRepositorioTitular : IRepositorio<Titular>
 {
-    void AgregarTitular(Titular titular);
-    void EliminarTitular(int titularId);
-    void ModificarTitular(Titular titular);
-    List<Titular> ListarTitulares();
 }

@@ -1,9 +1,12 @@
-﻿using Aplicacion.Entidades;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Aplicacion.Entidades;
 using Aplicacion.Interfaces;
 using Aplicacion.UseCases.Asegurables;
 using Aplicacion.UseCases.Polizas;
 using Aplicacion.UseCases.Titulares;
 
+
+var serviciosPoliza = new ServiceCollection();
 //Inyección de dependencias a casos de usos de Titular
 IRepositorioTitular repoTitular = new RepositorioTitularTXT();
 AgregarTitularUseCase agregarTitular = new AgregarTitularUseCase(repoTitular);
@@ -35,17 +38,17 @@ Console.WriteLine("############################################");
 // Instancia de Titular
 Titular titular = new Titular(33123456, "García", "Juan")
 {
-    direccion = "13 nro. 546",
-    telefono = "221-456456",
-    email = "joseGarcia@gmail.com"
+    Direccion = "13 nro. 546",
+    Telefono = "221-456456",
+    Email = "joseGarcia@gmail.com"
 };
-Console.WriteLine($"Id del titular recién instanciado: {titular.id}");
+Console.WriteLine($"Id del titular recién instanciado: {titular.Id}");
 
 // Agregar titular al repositorio
 PersistirTitular(titular);
 
 // Comprobar ID correcta
-Console.WriteLine($"Id del titular una vez persistido: {titular.id}");
+Console.WriteLine($"Id del titular una vez persistido: {titular.Id}");
 
 // Agregar más titulares
 PersistirTitular(new Titular(20654987, "Rodriguez", "Ana"));
@@ -86,11 +89,11 @@ Console.WriteLine("################################################");
 
 // Instancia de Poliza
 Poliza poliza = new Poliza("TodoRiesgo", 2000.0, new Vehiculo(), 2000.00, "22/05/2020");
-Console.WriteLine($"Id de la poliza recién instanciada: {poliza.id}");
+Console.WriteLine($"Id de la poliza recién instanciada: {poliza.Id}");
 
 // Guardar instancia en repositorio
 PersistirPoliza(poliza);
-Console.WriteLine($"Id de la poliza una vez persistida: {poliza.id}");
+Console.WriteLine($"Id de la poliza una vez persistida: {poliza.Id}");
 
 // Agrega Polizas
 PersistirPoliza(new Poliza("TodoRiesgo", new Vehiculo()));
@@ -103,9 +106,9 @@ ListarPolizas();
 // Modificar una poliza existente
 Console.WriteLine();
 Console.WriteLine("Modificando el titular con ID 1");
-poliza.tipoCobertura = "ResponsabilidadCivil";
-poliza.franquicia = 50000.0;
-poliza.valorAsegurado = 100000.0;
+poliza.TipoCobertura = "ResponsabilidadCivil";
+poliza.Franquicia = 50000.0;
+poliza.ValorAsegurado = 100000.0;
 
 // Persistir la modificación
 modificarPoliza.Ejecutar(poliza);
@@ -131,13 +134,13 @@ Console.WriteLine("DEMO VEHICULOS");
 Console.WriteLine("################################################");
 // Instancia de vehiculo
 Vehiculo vehiculo = new Vehiculo("ABC212", "Ford", "2013");
-Console.WriteLine($"Id de la Vehiculo recién instanciada: {vehiculo.id}");
+Console.WriteLine($"Id de la Vehiculo recién instanciada: {vehiculo.Id}");
 
 // Se agrega el vehiculo a repositorio utilizando un método local
 PersistirVehiculo(vehiculo);
 
 // El id que corresponde al vehiculo es establecido por el repositorio
-Console.WriteLine($"Id de la Vehiculo una vez persistida: {vehiculo.id}");
+Console.WriteLine($"Id de la Vehiculo una vez persistida: {vehiculo.Id}");
 
 // Se agregan unos Vehiculos más
 PersistirVehiculo(new Vehiculo("ASK203", "Chevrolet", "1996"));
@@ -149,9 +152,9 @@ ListarVehiculos();
 //Modificar un Vehiculo existente
 Console.WriteLine();
 Console.WriteLine("Modificando el titular con ID 1");
-vehiculo.marca = "Dodge";
-vehiculo.dominio = "ZZZ999";
-vehiculo.fabricacion = "1980";
+vehiculo.Marca = "Dodge";
+vehiculo.Dominio = "ZZZ999";
+vehiculo.Fabricacion = "1980";
 
 modificarAsegurable.Ejecutar(vehiculo);
 ListarVehiculos();
