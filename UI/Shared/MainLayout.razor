@@ -14,9 +14,51 @@
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" Elevation="2">
         <MudDrawerHeader>
-            <MudText Typo="Typo.h5" Class="mt-1">Application</MudText>
+            <MudText Typo="Typo.h5" Class="mt-1">Aseguradora</MudText>
         </MudDrawerHeader>
         @*NavMenu*@
+        <MudNavMenu>
+            <MudDivider Class="my-2"/>
+            <MudNavLink Href="/Home">Home</MudNavLink>
+            
+            <MudNavGroup Title="Listados" Expanded="true">
+                <MudNavLink Href="/polizas">Polizas</MudNavLink>
+                <MudNavLink Href="/titulares">Titulares</MudNavLink>  
+                <MudNavLink Href="/asegurables">Asegurables</MudNavLink>  
+                <MudNavLink Href="/siniestros">Siniestros</MudNavLink>  
+                <MudNavLink Href="/terceros">Terceros</MudNavLink>
+            </MudNavGroup>
+            
+            <MudNavGroup Title="Altas" Expanded="false">
+                <MudNavLink Href="/polizas">Polizas</MudNavLink>
+                <MudNavLink Href="/titulares">Titulares</MudNavLink>  
+                <MudNavLink Href="/asegurables">Asegurables</MudNavLink>  
+                <MudNavLink Href="/siniestros">Siniestros</MudNavLink>  
+                <MudNavLink Href="/terceros">Terceros</MudNavLink>  
+
+            </MudNavGroup>
+            <MudNavGroup Title="Bajas" Expanded="false">
+                <MudNavLink Href="/polizas">Polizas</MudNavLink>
+                <MudNavLink Href="/titulares">Titulares</MudNavLink>  
+                <MudNavLink Href="/asegurables">Asegurables</MudNavLink>  
+                <MudNavLink Href="/siniestros">Siniestros</MudNavLink>  
+                <MudNavLink Href="/terceros">Terceros</MudNavLink>  
+            </MudNavGroup>
+            
+            <MudNavGroup Title="Modificaciones" Expanded="false">
+                <MudNavLink Href="/polizas">Polizas</MudNavLink>
+                <MudNavLink Href="/titulares">Titulares</MudNavLink>  
+                <MudNavLink Href="/asegurables">Asegurables</MudNavLink>  
+                <MudNavLink Href="/siniestros">Siniestros</MudNavLink>  
+                <MudNavLink Href="/terceros">Terceros</MudNavLink>  
+            </MudNavGroup>
+            
+            <MudNavLink Href="/about">About</MudNavLink>
+        </MudNavMenu>
+        
+        <MudPaper Width="250px" Class="py-3" Elevation="0">
+
+        </MudPaper>
     </MudDrawer>
     <MudMainContent>
         @*Body*@
