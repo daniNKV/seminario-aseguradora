@@ -2,34 +2,72 @@
 using Aplicacion.Entidades;
 using Aplicacion.Interfaces;
 using Aplicacion.UseCases.Polizas;
+using Aplicacion.UseCases.Siniestros;
+using Aplicacion.UseCases.Terceros;
 using Aplicacion.UseCases.Titulares;
 using Aplicacion.UseCases.Vehiculos;
 using Repositorios.Txt;
 using Repositorios.Database;
 
 
-var serviciosPoliza = new ServiceCollection();
-//Inyección de dependencias a casos de usos de Titular
-IRepositorioTitular repoTitular = new RepositorioTitularTxt();
-AgregarTitularUseCase agregarTitular = new AgregarTitularUseCase(repoTitular);
-ListarTitularesUseCase listarTitulares = new ListarTitularesUseCase(repoTitular);
-ModificarTitularUseCase modificarTitular = new ModificarTitularUseCase(repoTitular);
-EliminarTitularUseCase eliminarTitular = new EliminarTitularUseCase(repoTitular);
-ListarTitularesConSusAsegurablesUseCase listarTitularesYVehiculos = new ListarTitularesConSusAsegurablesUseCase(repoTitular);
+// Inyección de dependencias    
+IServiceCollection services = new ServiceCollection();
+services.AddTransient<AgregarPolizaUseCase>();
+services.AddTransient<ListarPolizasUseCase>();
+services.AddTransient<EliminarPolizaUseCase>();
+services.AddTransient<ModificarPolizaUseCase>();
+services.AddScoped<IRepositorioPoliza, RepositorioPolizaTxt>();
+
+// Asegurables
+services.AddTransient<AgregarVehiculoUseCase>();
+services.AddTransient<ListarVehiculosUseCase>();
+services.AddTransient<EliminarVehiculoUseCase>();
+services.AddTransient<ModificarVehiculoUseCase>();
+services.AddScoped<IRepositorioVehiculo, RepositorioVehiculoTxt>();
+
+// Titulares
+services.AddTransient<AgregarTitularUseCase>();
+services.AddTransient<ListarTitularesUseCase>();
+services.AddTransient<ListarTitularesConSusAsegurablesUseCase>();
+services.AddTransient<EliminarTitularUseCase>();
+services.AddTransient<ModificarTitularUseCase>();
+services.AddScoped<IRepositorioTitular, RepositorioTitularTxt>();
+
+/*
+// Siniestros
+services.AddTransient<AgregarSiniestroUseCase>();
+services.AddTransient<ListarSiniestrosUseCase>();
+services.AddTransient<EliminarSiniestroUseCase>();
+services.AddTransient<ModificarSiniestroUseCase>();
+services.AddScoped<IRepositorioSiniestro, RepositorioSiniestroSqLite>();
+
+// Terceros
+services.AddTransient<AgregarTerceroUseCase>();
+services.AddTransient<ListarTercerosUseCase>();
+services.AddTransient<EliminarTerceroUseCase>();
+services.AddTransient<ModificarTerceroUseCase>();
+services.AddScoped<IRepositorioTercero, RepositorioTerceroTxt>();
+*/
+
+var proveedor = services.BuildServiceProvider();
+
+var agregarTitular = proveedor.GetService<AgregarTitularUseCase>();
+var listarTitulares = proveedor.GetService<ListarTitularesUseCase>();
+var modificarTitular = proveedor.GetService<ModificarTitularUseCase>();
+var eliminarTitular = proveedor.GetService<EliminarTitularUseCase>();
+var listarTitularesYVehiculos = proveedor.GetService<ListarTitularesConSusAsegurablesUseCase>();
 
 //Inyección de dependencias a casos de usos de Poliza
-IRepositorioPoliza repoPoliza = new RepositorioPolizaTxt();
-AgregarPolizaUseCase agregarPoliza = new AgregarPolizaUseCase(repoPoliza);
-ListarPolizasUseCase listarPolizas = new ListarPolizasUseCase(repoPoliza);
-ModificarPolizaUseCase modificarPoliza = new ModificarPolizaUseCase(repoPoliza);
-EliminarPolizaUseCase eliminarPoliza = new EliminarPolizaUseCase(repoPoliza);
+var agregarPoliza = proveedor.GetService<AgregarPolizaUseCase>();
+var listarPolizas = proveedor.GetService<ListarPolizasUseCase>();
+var modificarPoliza = proveedor.GetService<ModificarPolizaUseCase>();
+var eliminarPoliza = proveedor.GetService<EliminarPolizaUseCase>();
 
 //Inyección de dependencias a casos de usos de Asegurables
-IRepositorioVehiculo repoVehiculo = new RepositorioVehiculoTxt();
-AgregarVehiculoUseCase agregarAsegurable = new AgregarVehiculoUseCase(repoVehiculo);
-ListarVehiculosUseCase listarVehiculoses = new ListarVehiculosUseCase(repoVehiculo);
-ModificarVehiculosUseCase modificarVehiculos = new ModificarVehiculosUseCase(repoVehiculo) ;
-EliminarVehiculoUseCase eliminarVehiculo = new EliminarVehiculoUseCase(repoVehiculo) ;
+var agregarAsegurable = proveedor.GetService<AgregarVehiculoUseCase>();
+var listarVehiculoses = proveedor.GetService<ListarVehiculosUseCase>();
+var modificarVehiculo = proveedor.GetService<ModificarVehiculoUseCase>();
+var eliminarVehiculo = proveedor.GetService<EliminarVehiculoUseCase>();
 
 
 // DEMO TITULARES
@@ -38,7 +76,7 @@ Console.WriteLine("DEMO TITULARES");
 Console.WriteLine("############################################");
 
 // Instancia de Titular
-Titular titular = new Titular(33123456, "García", "Juan")
+var titular = new Titular(33123456, "García", "Juan")
 {
     Direccion = "13 nro. 546",
     Telefono = "221-456456",
@@ -69,18 +107,18 @@ PersistirTitular(titular); //este titular no pudo persistirse
 // Modificación de uno existente
 Console.WriteLine();
 Console.WriteLine("Modificando el titular con DNI 20654987");
-modificarTitular.Ejecutar(titular);
+modificarTitular?.Ejecutar(titular);
 ListarTitulares();
 
 // Eliminación de un titular
 Console.WriteLine();
 Console.WriteLine("Eliminando al titular con id 1");
-eliminarTitular.Ejecutar(1);
+eliminarTitular?.Ejecutar(1);
 ListarTitulares();
 
 
 
-for (int i = 0; i < 3; i++) {
+for (var i = 0; i < 3; i++) {
     Console.WriteLine();
 }
 
@@ -90,7 +128,7 @@ Console.WriteLine("DEMO POLIZAS");
 Console.WriteLine("################################################");
 
 // Instancia de Poliza
-Poliza poliza = new Poliza("TodoRiesgo", 2000.0, new Vehiculo(), 2000.00, "22/05/2020");
+var poliza = new Poliza("TodoRiesgo", 2000.0, new Vehiculo(), 2000.00, "22/05/2020");
 Console.WriteLine($"Id de la poliza recién instanciada: {poliza.Id}");
 
 // Guardar instancia en repositorio
@@ -113,7 +151,7 @@ poliza.Franquicia = 50000.0;
 poliza.ValorAsegurado = 100000.0;
 
 // Persistir la modificación
-modificarPoliza.Ejecutar(poliza);
+modificarPoliza?.Ejecutar(poliza);
 
 //Comprobar ejecución
 ListarPolizas();
@@ -121,12 +159,12 @@ ListarPolizas();
 //Eliminando un titular
 Console.WriteLine();
 Console.WriteLine("Eliminando al titular con id 1");
-eliminarPoliza.Ejecutar(1);
+eliminarPoliza?.Ejecutar(1);
 ListarPolizas();
 
 
 
-for (int i = 0; i < 3; i++) {
+for (var i = 0; i < 3; i++) {
     Console.WriteLine();
 }
 
@@ -135,7 +173,7 @@ Console.WriteLine("################################################");
 Console.WriteLine("DEMO VEHICULOS");
 Console.WriteLine("################################################");
 // Instancia de vehiculo
-Vehiculo vehiculo = new Vehiculo("ABC212", "Ford", "2013");
+var vehiculo = new Vehiculo("ABC212", "Ford", "2013");
 Console.WriteLine($"Id de la Vehiculo recién instanciada: {vehiculo.Id}");
 
 // Se agrega el vehiculo a repositorio utilizando un método local
@@ -158,13 +196,13 @@ vehiculo.Marca = "Dodge";
 vehiculo.Dominio = "ZZZ999";
 vehiculo.Fabricacion = "1980";
 
-modificarVehiculos.Ejecutar(vehiculo);
+modificarVehiculo?.Ejecutar(vehiculo);
 ListarVehiculos();
 
 // Eliminando un vehiculo
 Console.WriteLine();
 Console.WriteLine("Eliminando al titular con id 1");
-eliminarVehiculo.Ejecutar(1);
+eliminarVehiculo?.Ejecutar(1);
 ListarVehiculos();
 
 
@@ -174,7 +212,7 @@ void PersistirTitular(Titular t)
 {
     try
     {
-        agregarTitular.Ejecutar(t);
+        agregarTitular?.Ejecutar(t);
     }
     catch (Exception e)
     {
@@ -186,8 +224,8 @@ void ListarTitulares()
     Console.WriteLine();
     Console.WriteLine("Listando todos los titulares de vehículos");
 
-    List<Titular> lista = listarTitulares.Ejecutar();
-    foreach (Titular t in lista)
+    var lista = listarTitulares?.Ejecutar();
+    foreach (var t in lista ?? new List<Titular>())
     {
         Console.WriteLine(t);
     }
@@ -197,7 +235,7 @@ void PersistirVehiculo(Vehiculo v)
 {
     try
     {
-        agregarAsegurable.Ejecutar(v);
+        agregarAsegurable?.Ejecutar(v);
     }
     catch (Exception e)
     {
@@ -209,8 +247,8 @@ void ListarVehiculos()
 {
     Console.WriteLine();
     Console.WriteLine("Listando todos las polizas de vehículos");
-    List<Vehiculo> vehiculos = listarVehiculoses.Ejecutar();
-    foreach (Vehiculo v in vehiculos)
+    var vehiculos = listarVehiculoses?.Ejecutar();
+    foreach (var v in vehiculos ?? new List<Vehiculo>())
     {
         Console.WriteLine(v);
     }
@@ -220,7 +258,7 @@ void PersistirPoliza(Poliza p)
 {
     try
     {
-        agregarPoliza.Ejecutar(p);
+        agregarPoliza?.Ejecutar(p);
     }
     catch (Exception e)
     {
@@ -232,8 +270,8 @@ void ListarPolizas()
 {
     Console.WriteLine();
     Console.WriteLine("Listando todos las polizas de vehículos");
-    List<Poliza> lista = listarPolizas.Ejecutar();
-    foreach (Poliza p in lista)
+    var lista = listarPolizas?.Ejecutar();
+    foreach (var p in lista ?? new List<Poliza>())
     {
         Console.WriteLine(p);
     }
