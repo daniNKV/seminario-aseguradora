@@ -9,11 +9,11 @@ public enum Cobertura {
 }
 public class Poliza
 {
-    public static int CantidadPolizas { get; set; } = 0;
+    public static int CantidadPolizas { get; set; }
     public int Id { get; set; }
     public string TipoCobertura { get; set; } = "Indefinido";
     public double Franquicia { get; set; } = -1;
-    public IAsegurable? ElementoAsegurado { get; set; }
+    public Asegurable? ElementoAsegurado { get; set; }
     public double ValorAsegurado { get; set; } = -1;
     public string InicioVigencia { get; set; } = "Indefinido";
     public string FinVigencia { get; set; } = "Indefinido";
@@ -23,11 +23,11 @@ public class Poliza
 
     }
 
-    public Poliza(string cobertura, IAsegurable elementoAsegurado) {
+    public Poliza(string cobertura, Asegurable elementoAsegurado) {
         TipoCobertura = cobertura;
         ElementoAsegurado = elementoAsegurado;
     }
-    public Poliza(string cobertura, double franquicia, IAsegurable elementoAsegurado, double valorAsegurado, string inicio) {
+    public Poliza(string cobertura, double franquicia, Asegurable elementoAsegurado, double valorAsegurado, string inicio) {
         Id = -1;
         TipoCobertura = cobertura;
         Franquicia = franquicia;

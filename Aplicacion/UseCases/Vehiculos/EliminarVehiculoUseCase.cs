@@ -1,10 +1,10 @@
 using Aplicacion.Interfaces;
 
-namespace Aplicacion.UseCases.Asegurables;
+namespace Aplicacion.UseCases.Vehiculos;
 
-public class EliminarAsegurableUseCase: UseCase<IRepositorioAsegurable>
+public class EliminarVehiculoUseCase: UseCase<IRepositorioVehiculo>
 {
-    public EliminarAsegurableUseCase(IRepositorioAsegurable repositorio) : base(repositorio) {
+    public EliminarVehiculoUseCase(IRepositorioVehiculo repositorio) : base(repositorio) {
     }
     public void Ejecutar(int id)
     {

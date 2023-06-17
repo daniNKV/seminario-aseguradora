@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Aplicacion.Entidades;
 using Aplicacion.Interfaces;
-using Aplicacion.UseCases.Asegurables;
 using Aplicacion.UseCases.Polizas;
 using Aplicacion.UseCases.Titulares;
+using Aplicacion.UseCases.Vehiculos;
 using Repositorios.Txt;
 using Repositorios.Database;
 
@@ -25,11 +25,11 @@ ModificarPolizaUseCase modificarPoliza = new ModificarPolizaUseCase(repoPoliza);
 EliminarPolizaUseCase eliminarPoliza = new EliminarPolizaUseCase(repoPoliza);
 
 //Inyección de dependencias a casos de usos de Asegurables
-IRepositorioAsegurable repoAsegurable = new RepositorioAsegurableTxt();
-AgregarAsegurableUseCase agregarAsegurable = new AgregarAsegurableUseCase(repoAsegurable);
-ListarAsegurableUseCase listarAsegurables = new ListarAsegurableUseCase(repoAsegurable);
-ModificarAsegurableUseCase modificarAsegurable = new ModificarAsegurableUseCase(repoAsegurable) ;
-EliminarAsegurableUseCase eliminarAsegurable = new EliminarAsegurableUseCase(repoAsegurable) ;
+IRepositorioVehiculo repoVehiculo = new RepositorioVehiculoTxt();
+AgregarVehiculoUseCase agregarAsegurable = new AgregarVehiculoUseCase(repoVehiculo);
+ListarVehiculosUseCase listarVehiculoses = new ListarVehiculosUseCase(repoVehiculo);
+ModificarVehiculosUseCase modificarVehiculos = new ModificarVehiculosUseCase(repoVehiculo) ;
+EliminarVehiculoUseCase eliminarVehiculo = new EliminarVehiculoUseCase(repoVehiculo) ;
 
 
 // DEMO TITULARES
@@ -158,13 +158,13 @@ vehiculo.Marca = "Dodge";
 vehiculo.Dominio = "ZZZ999";
 vehiculo.Fabricacion = "1980";
 
-modificarAsegurable.Ejecutar(vehiculo);
+modificarVehiculos.Ejecutar(vehiculo);
 ListarVehiculos();
 
 // Eliminando un vehiculo
 Console.WriteLine();
 Console.WriteLine("Eliminando al titular con id 1");
-eliminarAsegurable.Ejecutar(1);
+eliminarVehiculo.Ejecutar(1);
 ListarVehiculos();
 
 
@@ -209,7 +209,7 @@ void ListarVehiculos()
 {
     Console.WriteLine();
     Console.WriteLine("Listando todos las polizas de vehículos");
-    List<Vehiculo> vehiculos = listarAsegurables.Ejecutar();
+    List<Vehiculo> vehiculos = listarVehiculoses.Ejecutar();
     foreach (Vehiculo v in vehiculos)
     {
         Console.WriteLine(v);

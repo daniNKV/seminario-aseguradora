@@ -25,7 +25,7 @@ public class RepositorioTitularSqLite : IRepositorioTitular
         throw new NotImplementedException();
     }
 
-    public List<IAsegurable> ListarItemsAsegurados(Titular titular)
+    public List<Asegurable> ListarItemsAsegurados(Titular titular)
     {
         throw new NotImplementedException();
     }

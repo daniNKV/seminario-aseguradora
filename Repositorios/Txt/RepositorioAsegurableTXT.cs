@@ -3,7 +3,7 @@ using Aplicacion.Interfaces;
 
 namespace Repositorios.Txt;
 
-public class RepositorioAsegurableTxt: IRepositorioAsegurable
+public class RepositorioVehiculoTxt: IRepositorioVehiculo
 {
     private const string NombreArchivo = "asegurables.txt";
 

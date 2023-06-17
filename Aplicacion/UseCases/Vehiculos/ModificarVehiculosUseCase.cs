@@ -1,11 +1,11 @@
 using Aplicacion.Entidades;
 using Aplicacion.Interfaces;
 
-namespace Aplicacion.UseCases.Asegurables;
+namespace Aplicacion.UseCases.Vehiculos;
 
-public class ModificarAsegurableUseCase : UseCase<IRepositorioAsegurable>
+public class ModificarVehiculosUseCase : UseCase<IRepositorioVehiculo>
 {
-    public ModificarAsegurableUseCase(IRepositorioAsegurable repositorio) : base(repositorio) {
+    public ModificarVehiculosUseCase(IRepositorioVehiculo repositorio) : base(repositorio) {
     }
     public void Ejecutar(Vehiculo asegurable)
     {

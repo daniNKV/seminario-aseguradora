@@ -3,7 +3,7 @@ using Aplicacion.Interfaces;
 
 namespace Repositorios.Database;
 
-public class RepositorioAsegurableSqLite : IRepositorioAsegurable
+public class RepositorioVehiculoSqLite : IRepositorioVehiculo
 {
     public void Agregar(Vehiculo elemento)
     {

@@ -30,7 +30,7 @@ public class RepositorioTitularTxt: IRepositorioTitular
         writer.WriteLine("Items asegurados:");
         if (titular.ItemsAsegurados != null)
         {
-            foreach (IAsegurable item in titular.ItemsAsegurados)
+            foreach (Asegurable item in titular.ItemsAsegurados)
             {   
                 writer.WriteLine($"- {item}");
             }
@@ -85,7 +85,7 @@ public class RepositorioTitularTxt: IRepositorioTitular
                 Direccion = reader.ReadLine()?.Split(':')[1].Trim() ?? "",
                 Email = reader.ReadLine()?.Split(':')[1].Trim() ?? ""
             };
-            var itemsAsegurados = new List<IAsegurable>();
+            var itemsAsegurados = new List<Asegurable>();
             reader.ReadLine();
             while ((line = reader.ReadLine()) != null  && !line.Equals("Titular"))
             {
@@ -103,7 +103,7 @@ public class RepositorioTitularTxt: IRepositorioTitular
         return titulares;
     }
 
-    public List<IAsegurable> ListarItemsAsegurados(Titular titular)
+    public List<Asegurable> ListarItemsAsegurados(Titular titular)
     {
         throw new NotImplementedException();
     }
@@ -122,7 +122,7 @@ public class RepositorioTitularTxt: IRepositorioTitular
             writer.WriteLine($"Email: {titular.Email}");
             writer.WriteLine("Items asegurados:");
             if (titular.ItemsAsegurados == null) continue;
-            foreach (IAsegurable item in titular.ItemsAsegurados)
+            foreach (Asegurable item in titular.ItemsAsegurados)
             {
                 writer.WriteLine($"- {item}");
             }
