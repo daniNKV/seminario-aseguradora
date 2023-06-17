@@ -3,24 +3,21 @@ using Aplicacion.Interfaces;
 
 public class RepositorioPolizaTXT: IRepositorioPoliza
 {
-    readonly string _nombreArchivo = "polizas.txt";
+    private const string NombreArchivo = "polizas.txt";
 
     public void Agregar(Poliza poliza)
     {
         Poliza.CantidadPolizas++;
         poliza.Id = Poliza.CantidadPolizas;
-        using (StreamWriter writer = new StreamWriter(_nombreArchivo, true))
-        {
-            writer.WriteLine("Poliza");
-            writer.WriteLine($"ID: {poliza.Id}");
-            writer.WriteLine($"Cobertura: {poliza.TipoCobertura}");
-            writer.WriteLine($"Franquicia: {poliza.Franquicia}");
-            writer.WriteLine($"Valor Asegurado: {poliza.ValorAsegurado}");
-            writer.WriteLine($"Inicio Vigencia: {poliza.InicioVigencia}");
-            writer.WriteLine($"Fin Vigencia: {poliza.FinVigencia}");
-            writer.WriteLine($"Elemento Asegurado: {poliza.ElementoAsegurado?.ToString()}");
-
-        }
+        using var writer = new StreamWriter(NombreArchivo, true);
+        writer.WriteLine("Poliza");
+        writer.WriteLine($"ID: {poliza.Id}");
+        writer.WriteLine($"Cobertura: {poliza.TipoCobertura}");
+        writer.WriteLine($"Franquicia: {poliza.Franquicia}");
+        writer.WriteLine($"Valor Asegurado: {poliza.ValorAsegurado}");
+        writer.WriteLine($"Inicio Vigencia: {poliza.InicioVigencia}");
+        writer.WriteLine($"Fin Vigencia: {poliza.FinVigencia}");
+        writer.WriteLine($"Elemento Asegurado: {poliza.ElementoAsegurado?.ToString()}");
     }
 
     public void Eliminar(int polizaId)
@@ -56,7 +53,7 @@ public class RepositorioPolizaTXT: IRepositorioPoliza
     {
         List<Poliza> polizas = new List<Poliza>();
 
-        using (StreamReader reader = new StreamReader(_nombreArchivo))
+        using (StreamReader reader = new StreamReader(NombreArchivo))
         {
             string line = reader.ReadLine() ?? "";
             while (!reader.EndOfStream) {
@@ -87,7 +84,7 @@ public class RepositorioPolizaTXT: IRepositorioPoliza
     
     private void EscribirTodas(List<Poliza> polizas)
     {
-        using (StreamWriter writer = new StreamWriter(_nombreArchivo, false))
+        using (StreamWriter writer = new StreamWriter(NombreArchivo, false))
         {
             foreach(Poliza poliza in polizas) {
                 writer.WriteLine("Poliza");

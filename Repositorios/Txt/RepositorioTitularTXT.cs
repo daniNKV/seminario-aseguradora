@@ -99,7 +99,6 @@ public class RepositorioTitularTXT: IRepositorioTitular
         }
         return titulares;
     }
-
     private void EscribirTodos(List<Titular> titulares)
     {
         using (StreamWriter writer = new StreamWriter(_nombreArchivo, false))
