@@ -7,7 +7,9 @@ public class RepositorioTitularSqLite : IRepositorioTitular
 {
     public void Agregar(Titular elemento)
     {
-        throw new NotImplementedException();
+        using var context = new AseguradoraContexto();
+        context.Titulares.Add(elemento);
+        context.SaveChanges();    
     }
 
     public void Eliminar(int id)

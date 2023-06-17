@@ -7,7 +7,9 @@ public class RepositorioVehiculoSqLite : IRepositorioVehiculo
 {
     public void Agregar(Vehiculo elemento)
     {
-        throw new NotImplementedException();
+        using var context = new AseguradoraContexto();
+        context.Vehiculos.Add(elemento);
+        context.SaveChanges();
     }
 
     public void Eliminar(int id)

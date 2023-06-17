@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Aplicacion.Entidades;
 using Aplicacion.Interfaces;
 
@@ -7,7 +8,9 @@ public class RepositorioPolizaSqLite : IRepositorioPoliza
 {
     public void Agregar(Poliza elemento)
     {
-        throw new NotImplementedException();
+        using var context = new AseguradoraContexto();
+        context.Polizas.Add(elemento);
+        context.SaveChanges();
     }
 
     public void Eliminar(int id)
@@ -22,6 +25,8 @@ public class RepositorioPolizaSqLite : IRepositorioPoliza
 
     public List<Poliza> Listar()
     {
-        throw new NotImplementedException();
+        using var context = new AseguradoraContexto();
+        Debug.Write("Listando polizas...");
+        return context.Polizas.ToList();
     }
 }

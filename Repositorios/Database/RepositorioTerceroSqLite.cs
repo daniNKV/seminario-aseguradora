@@ -7,7 +7,9 @@ public class RepositorioTerceroSqLite : IRepositorioTercero
 {
     public void Agregar(Tercero elemento)
     {
-        throw new NotImplementedException();
+        using var context = new AseguradoraContexto();
+        context.Terceros.Add(elemento);
+        context.SaveChanges();    
     }
 
     public void Eliminar(int id)

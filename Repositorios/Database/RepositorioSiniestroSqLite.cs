@@ -7,7 +7,9 @@ public class RepositorioSiniestroSqLite : IRepositorioSiniestro
 {
     public void Agregar(Siniestro elemento)
     {
-        throw new NotImplementedException();
+        using var context = new AseguradoraContexto();
+        context.Siniestros.Add(elemento);
+        context.SaveChanges();    
     }
 
     public void Eliminar(int id)

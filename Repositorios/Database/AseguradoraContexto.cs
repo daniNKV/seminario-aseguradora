@@ -1,5 +1,4 @@
 using Aplicacion.Entidades;
-using Aplicacion.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Repositorios.Database;
@@ -17,13 +16,10 @@ public class AseguradoraContexto : DbContext
     {
         optionsBuilder.UseSqlite("data source=Aseguradora.sqlite");
     }
-    /*
+/*
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Examen>().ToTable("Parciales");
-        modelBuilder.Entity<Alumno>()
-            .Property(a => a.Email)
-            .HasColumnName("Mail").HasDefaultValue("no especificado");
+        
     }
-    */
+*/
 }
