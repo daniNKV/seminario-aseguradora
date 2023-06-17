@@ -2,6 +2,7 @@ namespace Aplicacion.Entidades;
 public class Vehiculo : Asegurable
 { 
     public static int CantidadAsegurados { get; set; }
+    public int TitularId { get; init; }
     public string Dominio { get; set; } = "Indefinido";
     public string Marca { get; set; } = "Indefinido";
     public string Fabricacion { get; set; } = "Indefinido";
