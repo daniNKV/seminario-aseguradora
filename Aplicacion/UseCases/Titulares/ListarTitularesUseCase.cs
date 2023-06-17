@@ -10,6 +10,5 @@ public class ListarTitularesUseCase : UseCase<IRepositorioTitular>
     public List<Titular> Ejecutar()
     {
         return Repositorio.Listar();
-
     }
 }

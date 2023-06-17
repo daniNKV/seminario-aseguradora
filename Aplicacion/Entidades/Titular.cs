@@ -5,7 +5,6 @@ public class Titular: Persona {
     public int Id { get; set; }
     public string Direccion { get; set; } = "Indefinido";
     public string Email { get; set; } = "Indefinido";
-    public List<int> itemsAseguradosId { get; set; } = new();
     public List<Vehiculo>? ItemsAsegurados { get; set; }
 
     public Titular()

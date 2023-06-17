@@ -59,7 +59,8 @@ builder.Services.AddTransient<EliminarTerceroUseCase>();
 builder.Services.AddTransient<ModificarTerceroUseCase>();
 builder.Services.AddScoped<IRepositorioTercero, RepositorioTerceroSqLite>();
 
-
+using var context = new AseguradoraContexto();
+context.Database.EnsureCreated();
 
 var app = builder.Build();
 

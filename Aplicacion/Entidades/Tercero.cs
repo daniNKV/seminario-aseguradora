@@ -2,7 +2,7 @@ namespace Aplicacion.Entidades;
 
 public class Tercero: Persona
 {
-    private int Id { get; set; }
+    public int Id { get; set; }
     public string Aseguradora { get; set; } = "Indefinido";
     public int SiniestroId { get; set; } = -1;
     public Siniestro? Siniestro { get => Siniestro; set => Siniestro = value;}
