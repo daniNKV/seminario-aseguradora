@@ -4,11 +4,13 @@ using Aplicacion.Interfaces;
 using Aplicacion.UseCases.Asegurables;
 using Aplicacion.UseCases.Polizas;
 using Aplicacion.UseCases.Titulares;
+using Repositorios.Txt;
+using Repositorios.Database;
 
 
 var serviciosPoliza = new ServiceCollection();
 //Inyección de dependencias a casos de usos de Titular
-IRepositorioTitular repoTitular = new RepositorioTitularTXT();
+IRepositorioTitular repoTitular = new RepositorioTitularTxt();
 AgregarTitularUseCase agregarTitular = new AgregarTitularUseCase(repoTitular);
 ListarTitularesUseCase listarTitulares = new ListarTitularesUseCase(repoTitular);
 ModificarTitularUseCase modificarTitular = new ModificarTitularUseCase(repoTitular);
@@ -16,14 +18,14 @@ EliminarTitularUseCase eliminarTitular = new EliminarTitularUseCase(repoTitular)
 ListarTitularesConSusAsegurablesUseCase listarTitularesYVehiculos = new ListarTitularesConSusAsegurablesUseCase(repoTitular);
 
 //Inyección de dependencias a casos de usos de Poliza
-IRepositorioPoliza repoPoliza = new RepositorioPolizaTXT();
+IRepositorioPoliza repoPoliza = new RepositorioPolizaTxt();
 AgregarPolizaUseCase agregarPoliza = new AgregarPolizaUseCase(repoPoliza);
 ListarPolizasUseCase listarPolizas = new ListarPolizasUseCase(repoPoliza);
 ModificarPolizaUseCase modificarPoliza = new ModificarPolizaUseCase(repoPoliza);
 EliminarPolizaUseCase eliminarPoliza = new EliminarPolizaUseCase(repoPoliza);
 
 //Inyección de dependencias a casos de usos de Asegurables
-IRepositorioAsegurable repoAsegurable = new RepositorioAsegurableTXT();
+IRepositorioAsegurable repoAsegurable = new RepositorioAsegurableTxt();
 AgregarAsegurableUseCase agregarAsegurable = new AgregarAsegurableUseCase(repoAsegurable);
 ListarAsegurableUseCase listarAsegurables = new ListarAsegurableUseCase(repoAsegurable);
 ModificarAsegurableUseCase modificarAsegurable = new ModificarAsegurableUseCase(repoAsegurable) ;

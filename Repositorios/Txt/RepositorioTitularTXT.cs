@@ -102,6 +102,12 @@ public class RepositorioTitularTxt: IRepositorioTitular
 
         return titulares;
     }
+
+    public List<IAsegurable> ListarItemsAsegurados(Titular titular)
+    {
+        throw new NotImplementedException();
+    }
+
     private static void EscribirTodos(List<Titular> titulares)
     {
         using var writer = new StreamWriter(NombreArchivo, false);

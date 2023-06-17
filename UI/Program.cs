@@ -6,6 +6,7 @@ using Aplicacion.UseCases.Terceros;
 using Aplicacion.UseCases.Siniestros;
 using UI.Data;
 using MudBlazor.Services;
+using Repositorios.Database;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -51,6 +52,10 @@ builder.Services.AddTransient<EliminarTerceroUseCase>();
 builder.Services.AddTransient<ModificarTerceroUseCase>();
 
 */
+using var context = new AseguradoraContexto();
+context.Database.EnsureCreated();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
