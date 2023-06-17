@@ -17,7 +17,7 @@ builder.Services.AddSingleton<WeatherForecastService>();
 
 // Add blazor components library
 builder.Services.AddMudServices();
-
+/*
 // Add use cases
 // Polizas
 builder.Services.AddTransient<AgregarPolizaUseCase>();
@@ -50,7 +50,7 @@ builder.Services.AddTransient<ListarTercerosUseCase>();
 builder.Services.AddTransient<EliminarTerceroUseCase>();
 builder.Services.AddTransient<ModificarTerceroUseCase>();
 
-
+*/
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
