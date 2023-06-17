@@ -40,13 +40,13 @@ builder.Services.AddTransient<ModificarAsegurableUseCase>();
 
 // Siniestros
 builder.Services.AddTransient<AgregarSiniestroUseCase>();
-builder.Services.AddTransient<ListarSiniestroUseCase>();
+builder.Services.AddTransient<ListarSiniestrosUseCase>();
 builder.Services.AddTransient<EliminarSiniestroUseCase>();
 builder.Services.AddTransient<ModificarSiniestroUseCase>();
 
 // Terceros
 builder.Services.AddTransient<AgregarTerceroUseCase>();
-builder.Services.AddTransient<ListarTerceroUseCase>();
+builder.Services.AddTransient<ListarTercerosUseCase>();
 builder.Services.AddTransient<EliminarTerceroUseCase>();
 builder.Services.AddTransient<ModificarTerceroUseCase>();
 
