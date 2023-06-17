@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repositorios", "Repositorio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Consola", "Consola\Consola.csproj", "{70217E95-4CB8-4339-9374-37419E925B55}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI", "UI\UI.csproj", "{D5CBAC3B-85C6-499F-BAB6-E3B204D19B64}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{70217E95-4CB8-4339-9374-37419E925B55}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70217E95-4CB8-4339-9374-37419E925B55}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70217E95-4CB8-4339-9374-37419E925B55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5CBAC3B-85C6-499F-BAB6-E3B204D19B64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5CBAC3B-85C6-499F-BAB6-E3B204D19B64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5CBAC3B-85C6-499F-BAB6-E3B204D19B64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5CBAC3B-85C6-499F-BAB6-E3B204D19B64}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
