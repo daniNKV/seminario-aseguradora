@@ -3,9 +3,9 @@ using Aplicacion.Interfaces;
 
 namespace Aplicacion.UseCases.Vehiculos;
 
-public class ModificarVehiculosUseCase : UseCase<IRepositorioVehiculo>
+public class ModificarVehiculoUseCase : UseCase<IRepositorioVehiculo>
 {
-    public ModificarVehiculosUseCase(IRepositorioVehiculo repositorio) : base(repositorio) {
+    public ModificarVehiculoUseCase(IRepositorioVehiculo repositorio) : base(repositorio) {
     }
     public void Ejecutar(Vehiculo asegurable)
     {

@@ -5,7 +5,7 @@ namespace Repositorios.Txt;
 
 public class RepositorioVehiculoTxt: IRepositorioVehiculo
 {
-    private const string NombreArchivo = "asegurables.txt";
+    private const string NombreArchivo = "vehiculos.txt";
 
     public void Agregar(Vehiculo vehiculo)
     {
