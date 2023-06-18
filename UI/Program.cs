@@ -8,6 +8,7 @@ using Aplicacion.UseCases.Siniestros;
 using Aplicacion.UseCases.Vehiculos;
 using UI.Data;
 using MudBlazor.Services;
+using Repositorios;
 using Repositorios.Database;
 using Repositorios.Txt;
 
@@ -61,6 +62,8 @@ builder.Services.AddScoped<IRepositorioTercero, RepositorioTerceroSqLite>();
 
 using var context = new AseguradoraContexto();
 context.Database.EnsureCreated();
+AseguradoraInit.Inicializar(context);
+context.Dispose();
 
 var app = builder.Build();
 
