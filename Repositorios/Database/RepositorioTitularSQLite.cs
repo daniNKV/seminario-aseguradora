@@ -1,5 +1,6 @@
 using Aplicacion.Entidades;
 using Aplicacion.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repositorios.Database;
 
@@ -24,11 +25,22 @@ public class RepositorioTitularSqLite : IRepositorioTitular
 
     public List<Titular> Listar()
     {
-        throw new NotImplementedException();
+        using var context = new AseguradoraContexto();
+        var titulares = context.Titulares.ToList();
+        return titulares;    
     }
 
-    public List<Asegurable> ListarItemsAsegurados(Titular titular)
+    public List<Vehiculo> ListarItemsAsegurados(Titular titular)
     {
         throw new NotImplementedException();
+
+    }
+    
+
+    public List<Titular> ListarTitularesConSusVehiculos()
+    {
+        using var context = new AseguradoraContexto();
+        var titulares = context.Titulares.Include(t => t.ItemsAsegurados).ToList();
+        return titulares;        
     }
 }

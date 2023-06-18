@@ -1,0 +1,92 @@
+@using MudBlazor
+@using Aplicacion.Entidades
+@using Aplicacion.UseCases.Titulares
+@inject ListarTitularesConSusAsegurablesUseCase ListarTitularesConSusVehiculosUseCase
+@page "/lista/titulares"
+
+<MudContainer Fixed="true">
+    <MudDataGrid Items="@_titulares" xs="12" sm="7" QuickFilter="@_quickFilter">
+        <ToolBarContent>
+            <MudText Typo="Typo.h4">Titulares</MudText>
+            <MudSpacer />
+                <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+            
+        <Columns>
+            <PropertyColumn Property="p => p.Nombre" Title="Nombre"/>
+            <PropertyColumn Property="x => x.Apellido" Title="Apellido"/>
+            <PropertyColumn Property="x => x.Direccion" Title="Direccion" Sortable="false"/>
+            <PropertyColumn Property="x => x.Dni" Title="DNI" Sortable="false"/>
+            <PropertyColumn Property="x => x.Telefono" Title="Telefono" Sortable="false"/>
+            <PropertyColumn Property="x => x.Email" Title="Email" Sortable="false"/>
+            <HierarchyColumn T="Titular" ButtonDisabledFunc="@(x => !x.ItemsAsegurados?.Any() ?? false)" />
+
+            <TemplateColumn CellClass="d-flex justify-start" Title="Acciones">
+                <CellTemplate>
+                    <MudStack Row Class="-my-4">
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" aria-label="add to favorite"></MudIconButton>
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete"></MudIconButton>
+                    </MudStack>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+        <ChildRowContent>
+            <MudContainer Fixed="true">
+                <MudDataGrid Items="@context.Item.ItemsAsegurados" xs="12" sm="7">
+                    <Columns>
+                        <PropertyColumn Property="v => v.Id" Title="ID"/>
+                        <PropertyColumn Property="v => v.Marca"/>
+                        <PropertyColumn Property="v => v.Fabricacion"/>
+                        <PropertyColumn Property="v => v.Dominio"/>
+                        <TemplateColumn CellClass="d-flex justify-start" Title="Poliza">
+                            <CellTemplate Context="vehiculos">
+                                <MudButton Variant="Variant.Outlined" Color="Color.Primary">Ver Poliza</MudButton>
+                            </CellTemplate>
+                        </TemplateColumn>
+                    </Columns>
+
+                </MudDataGrid>
+            </MudContainer>
+        </ChildRowContent>
+        <PagerContent>
+            <MudDataGridPager T="Titular" />
+        </PagerContent>
+    </MudDataGrid>
+    
+</MudContainer>
+
+@code { 
+    private IEnumerable<Titular>? _titulares = new List<Titular>();
+    private string? _searchString;
+    private bool _sortNameByLength;
+    
+    protected override void OnInitialized()
+    {
+        _titulares = ListarTitularesConSusVehiculosUseCase.Ejecutar();
+    }
+
+    private Func<Titular, object> _sortBy => x =>
+    {
+        if (_sortNameByLength)
+            return x.Nombre.Length;
+        else
+            return x.Nombre;
+    };
+    
+    private Func<Titular, bool> _quickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (x.Nombre.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.Apellido.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ($"{x.Direccion} {x.Email} {x.Id}".Contains(_searchString))
+            return true;
+
+        return false;
+    };
+}

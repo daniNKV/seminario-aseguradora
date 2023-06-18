@@ -103,10 +103,6 @@ public class RepositorioTitularTxt: IRepositorioTitular
         return titulares;
     }
 
-    public List<Asegurable> ListarItemsAsegurados(Titular titular)
-    {
-        throw new NotImplementedException();
-    }
 
     private static void EscribirTodos(List<Titular> titulares)
     {
@@ -127,5 +123,15 @@ public class RepositorioTitularTxt: IRepositorioTitular
                 writer.WriteLine($"- {item}");
             }
         }
+    }
+
+    public List<Vehiculo> ListarItemsAsegurados(Titular titular)
+    {
+        throw new NotImplementedException();
+    }
+
+    public List<Titular> ListarTitularesConSusVehiculos()
+    {
+        throw new NotImplementedException();
     }
 }
