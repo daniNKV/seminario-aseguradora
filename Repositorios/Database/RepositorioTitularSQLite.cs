@@ -35,8 +35,6 @@ public class RepositorioTitularSqLite : IRepositorioTitular
         throw new NotImplementedException();
 
     }
-    
-
     public List<Titular> ListarTitularesConSusVehiculos()
     {
         using var context = new AseguradoraContexto();

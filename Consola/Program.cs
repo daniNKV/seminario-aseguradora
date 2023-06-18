@@ -28,7 +28,7 @@ services.AddScoped<IRepositorioVehiculo, RepositorioVehiculoTxt>();
 // Titulares
 services.AddTransient<AgregarTitularUseCase>();
 services.AddTransient<ListarTitularesUseCase>();
-services.AddTransient<ListarTitularesConSusAsegurablesUseCase>();
+services.AddTransient<ListarTitularesConSusVehiculosUseCase>();
 services.AddTransient<EliminarTitularUseCase>();
 services.AddTransient<ModificarTitularUseCase>();
 services.AddScoped<IRepositorioTitular, RepositorioTitularTxt>();
@@ -55,7 +55,7 @@ var agregarTitular = proveedor.GetService<AgregarTitularUseCase>();
 var listarTitulares = proveedor.GetService<ListarTitularesUseCase>();
 var modificarTitular = proveedor.GetService<ModificarTitularUseCase>();
 var eliminarTitular = proveedor.GetService<EliminarTitularUseCase>();
-var listarTitularesYVehiculos = proveedor.GetService<ListarTitularesConSusAsegurablesUseCase>();
+var listarTitularesYVehiculos = proveedor.GetService<ListarTitularesConSusVehiculosUseCase>();
 
 //Inyección de dependencias a casos de usos de Poliza
 var agregarPoliza = proveedor.GetService<AgregarPolizaUseCase>();

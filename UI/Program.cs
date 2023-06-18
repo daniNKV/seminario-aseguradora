@@ -41,7 +41,7 @@ builder.Services.AddScoped<IRepositorioVehiculo, RepositorioVehiculoSqLite>();
 // Titulares
 builder.Services.AddTransient<AgregarTitularUseCase>();
 builder.Services.AddTransient<ListarTitularesUseCase>();
-builder.Services.AddTransient<ListarTitularesConSusAsegurablesUseCase>();
+builder.Services.AddTransient<ListarTitularesConSusVehiculosUseCase>();
 builder.Services.AddTransient<EliminarTitularUseCase>();
 builder.Services.AddTransient<ModificarTitularUseCase>();
 builder.Services.AddScoped<IRepositorioTitular, RepositorioTitularSqLite>();
