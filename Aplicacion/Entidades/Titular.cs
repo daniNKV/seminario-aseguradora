@@ -5,11 +5,10 @@ public class Titular: Persona {
     public int Id { get; set; }
     public string Direccion { get; set; } = "Indefinido";
     public string Email { get; set; } = "Indefinido";
-    public List<Vehiculo>? ItemsAsegurados { get; set; }
+    public List<Vehiculo>? ItemsAsegurados { get; set; } = new List<Vehiculo>();
 
     public Titular()
     {
-        ItemsAsegurados = new List<Vehiculo>();
     }
     public Titular(int dni, string apellido, string nombre): base(dni, nombre, apellido) {
         Id = -1;

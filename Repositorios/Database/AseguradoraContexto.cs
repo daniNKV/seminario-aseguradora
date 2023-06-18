@@ -16,10 +16,17 @@ public class AseguradoraContexto : DbContext
     {
         optionsBuilder.UseSqlite("data source=Aseguradora.sqlite");
     }
-/*
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        
+        modelBuilder.Entity<Titular>()
+            .HasMany(t => t.ItemsAsegurados)
+            .WithOne(v => v.Titular)
+            .HasForeignKey(v => v.TitularId)
+            .OnDelete(DeleteBehavior.Cascade);;
+
     }
-*/
+    
+    
 }
