@@ -9,5 +9,6 @@ public class Siniestro
     public DateTime FechaSuceso { get; set; }
     public String Direccion { get; set; } = "Indefinido";
     public String Descripcion { get; set; } = "Indefinido";
+    public List<Tercero> Terceros { get; set; } = new ();
 
 }

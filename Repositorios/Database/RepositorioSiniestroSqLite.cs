@@ -1,5 +1,6 @@
 using Aplicacion.Entidades;
 using Aplicacion.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repositorios.Database;
 
@@ -24,7 +25,16 @@ public class RepositorioSiniestroSqLite : IRepositorioSiniestro
 
     public List<Siniestro> Listar()
     {
-        throw new NotImplementedException();
+        using var context = new AseguradoraContexto();
+        var siniestros = context.Siniestros.Include(s => s.Poliza).ToList();
+        return siniestros;        
+    }
+    
+    public List<Siniestro> ListarSiniestrosConSusTerceros()
+    {
+        using var context = new AseguradoraContexto();
+        var siniestros = context.Siniestros.ToList();
+        return siniestros;        
     }
 
     public List<Tercero> ListarTerceros(Siniestro siniestro)
