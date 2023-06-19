@@ -22,7 +22,7 @@
         <MudForm Model="@_siniestro" @ref="@_form" Validation="@(_siniestrosValidator.ValidateValue)" ValidationDelay="0">
             <MudCardContent>
                 <MudNumericField
-                    Label="Titular ID"
+                    Label="Poliza ID"
                     Placeholder="Ingrese ID del titular de la poliza"
                     Variant="Variant.Text" Min="0"
                     @bind-Value="_siniestro.PolizaId"
@@ -86,9 +86,9 @@
     {
         _form?.Validate();
 
-        if (_form is {IsValid: false } && !ValidarFecha(_siniestro)) return;
-        
-        if (_esNuevoSiniestro)
+        if (_form is {IsValid: false }) return;
+
+        if (_esNuevoSiniestro && ValidarFecha(_siniestro))
         {
             _siniestro.FechaIngreso = DateTime.Now;
             AgregarSiniestro.Ejecutar(_siniestro);
@@ -99,12 +99,15 @@
             ModificarSiniestro.Ejecutar(_siniestro);
             Snackbar?.Add("Modificado!");
         }
+        
         Navegador.NavigateTo($"/lista/siniestros/{_siniestro.Id}");
     }
     
     private static bool ValidarFecha(Siniestro siniestro)
     {
+        Console.WriteLine(siniestro.Poliza?.FinVigencia < siniestro.FechaSuceso);
         if (siniestro.Poliza?.FinVigencia < siniestro.FechaSuceso)
+            
         {
             return false;
         }
