@@ -25,7 +25,14 @@ public class RepositorioVehiculoSqLite : IRepositorioVehiculo
 
     public void Eliminar(int id)
     {
-        throw new NotImplementedException();
+        using var context = new AseguradoraContexto();
+        
+        var vehiculoAEliminar = context.Titulares.FirstOrDefault(t => t.Id == id);
+        if (vehiculoAEliminar != null)
+        {
+            context.Titulares.Remove(vehiculoAEliminar);
+            context.SaveChanges();
+        }    
     }
 
     public void Modificar(Vehiculo elemento)

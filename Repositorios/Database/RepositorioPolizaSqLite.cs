@@ -25,8 +25,15 @@ public class RepositorioPolizaSqLite : IRepositorioPoliza
 
     public void Eliminar(int id)
     {
-        throw new NotImplementedException();
-    }
+        using var context = new AseguradoraContexto();
+        var polizaAEliminar = context.Polizas.FirstOrDefault(t => t.Id == id);
+        if (polizaAEliminar != null)
+        {
+            context.Polizas.Remove(polizaAEliminar);
+        } 
+        context.SaveChanges();
+
+    }    
 
     public void Modificar(Poliza elemento)
     {
@@ -45,6 +52,13 @@ public class RepositorioPolizaSqLite : IRepositorioPoliza
         using var context = new AseguradoraContexto();
         var poliza = context.Polizas.Single(p => p.VehiculoAsegurado.Id == vehiculo.Id);
         return poliza;
+    }
+
+    public Poliza? ObtenerPolizaDeSiniestro(Siniestro siniestro)
+    {
+        using var context = new AseguradoraContexto();
+        var poliza = context.Polizas.Single(p => p.Id == siniestro.PolizaId);
+        return poliza;    
     }
 }
 

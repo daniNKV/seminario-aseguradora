@@ -98,6 +98,11 @@ public class RepositorioPolizaTxt: IRepositorioPoliza
         throw new NotImplementedException();
     }
 
+    public Poliza? ObtenerPolizaDeSiniestro(Siniestro siniestro)
+    {
+        throw new NotImplementedException();
+    }
+
     private static void EscribirTodas(List<Poliza> polizas)
     {
         using var writer = new StreamWriter(NombreArchivo, false);

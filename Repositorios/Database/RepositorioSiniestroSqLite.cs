@@ -25,7 +25,15 @@ public class RepositorioSiniestroSqLite : IRepositorioSiniestro
 
     public void Eliminar(int id)
     {
-        throw new NotImplementedException();
+        using var context = new AseguradoraContexto();
+        
+        var siniestroAEliminar = context.Siniestros.FirstOrDefault(t => t.Id == id);
+        Console.WriteLine(siniestroAEliminar);
+        if (siniestroAEliminar != null)
+        {
+            context.Siniestros.Remove(siniestroAEliminar);
+            context.SaveChanges();
+        }
     }
 
     public void Modificar(Siniestro elemento)
