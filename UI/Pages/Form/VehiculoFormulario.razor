@@ -46,7 +46,11 @@
 
             </MudCardContent>
             <MudCardActions>
-                <MudButton Variant="Variant.Filled" Color="Color.Secondary" DisableElevation="true" OnClick="@(ValidarFormulario)">Validar</MudButton>
+                <MudButton 
+                    Variant="Variant.Filled" 
+                    Color="Color.Secondary" 
+                    DisableElevation="true" 
+                    OnClick="@(ValidarFormulario)">Validar</MudButton>
 
                 <MudButton
                     OnClick="@(Submit)"
@@ -92,9 +96,7 @@
             ModificarVehiculo.Ejecutar(_vehiculo);
             Snackbar?.Add("Modificado!");
         }
-        
         Navegador.NavigateTo($"/lista/vehiculos/{_vehiculo.Id}");
-
     }
     
     public class VehiculosFluentValidator : AbstractValidator<Vehiculo>

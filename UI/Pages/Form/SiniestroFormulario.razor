@@ -31,8 +31,7 @@
                     Placeholder="Ingrese fecha del suceso"
                     Label="Fecha Suceso" 
                     @bind-Date="_siniestro.FechaSuceso"
-                    For="@(() => _siniestro.FechaSuceso)"
-                    />
+                    For="@(() => _siniestro.FechaSuceso)"/>
 
                 <MudTextField
                     Placeholder="Ingrese direccion"
@@ -47,8 +46,8 @@
                     For="@(() => _siniestro.Descripcion)"
                     Immediate="true"
                     Label="Descripcion"/>
-                
             </MudCardContent>
+            
             <MudCardActions>
                 <MudButton 
                     Variant="Variant.Filled" 
@@ -61,11 +60,9 @@
                     Variant="Variant.Filled"
                     Color="Color.Primary"
                     Class="ml-4">Agregar!</MudButton>
-
             </MudCardActions>
         </MudForm>
     </MudCard>
-
 </MudContainer>
 
 @code {
@@ -84,6 +81,7 @@
         if (siniestroEncontrado != null) _siniestro = siniestroEncontrado;
         _esNuevoSiniestro=false;
     }
+    
     private void Submit()
     {
         _form?.Validate();
@@ -101,10 +99,9 @@
             ModificarSiniestro.Ejecutar(_siniestro);
             Snackbar?.Add("Modificado!");
         }
-        
         Navegador.NavigateTo($"/lista/siniestros/{_siniestro.Id}");
-
     }
+    
     private bool ValidarFecha(Siniestro siniestro)
     {
         var poliza = ObtenerPolizaDeSiniestro.Ejecutar(siniestro) ?? throw new ArgumentNullException("ObtenerPolizaDeSiniestro.Ejecutar(siniestro)");
@@ -114,9 +111,9 @@
             Snackbar?.Add("La poliza esta vencida!");
             return false;
         }
-
         return true;
     }
+    
     public class SiniestrosFluentValidator : AbstractValidator<Siniestro>
     {
         public SiniestrosFluentValidator()
@@ -135,10 +132,7 @@
             RuleFor(x => x.Descripcion)
                 .NotEmpty()
                 .Length(1, 500);
-
         }
-
-        
         
         public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
         {

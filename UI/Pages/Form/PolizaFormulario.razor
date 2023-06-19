@@ -45,7 +45,9 @@
                     @bind-Value="_poliza.Franquicia"
                     For="@(() => _poliza.Franquicia)"/>
 
+                @*
                 <MudDatePicker Label="Inicio Vigencia" @bind-Date="@_poliza.InicioVigencia"/>
+                *@
                 <MudDatePicker Label="Fin Vigencia" @bind-Date="@_poliza.FinVigencia"/>
 
             </MudCardContent>
@@ -87,20 +89,20 @@
     private void Submit()
     {
         _form?.Validate();
-
         if (_form is {IsValid: false }) return;
         
         if (_esNuevaPoliza)
         {
+            _poliza.InicioVigencia = DateTime.Now;
             AgregarPoliza.Ejecutar(_poliza);
             Snackbar?.Add("Agregado!");
-            Navegador.NavigateTo($"/lista/polizas/{_poliza.Id}");
         }
         else
         {
             ModificarPoliza.Ejecutar(_poliza);
             Snackbar?.Add("Modificado!");
         }
+        Navegador.NavigateTo($"/lista/polizas/{_poliza.Id}");
     }
     
     public class PolizasFluentValidator : AbstractValidator<Poliza>
@@ -124,8 +126,8 @@
                 .NotEmpty()
                 .GreaterThanOrEqualTo(1);
 
-            RuleFor(x => x.InicioVigencia)
-                .NotEmpty();
+            // RuleFor(x => x.InicioVigencia)
+            //     .NotEmpty();
 
             RuleFor(x => x.FinVigencia)
                 .NotEmpty();

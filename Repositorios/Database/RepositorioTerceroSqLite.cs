@@ -37,7 +37,12 @@ public class RepositorioTerceroSqLite : IRepositorioTercero
 
     public void Modificar(Tercero elemento)
     {
-        throw new NotImplementedException();
+        using var context = new AseguradoraContexto();
+        var entidadExistente = context.Terceros.FirstOrDefault(e => e.Id == elemento.Id);
+        if (entidadExistente == null) return;
+        context.Entry(entidadExistente).State = EntityState.Modified;
+        context.Entry(entidadExistente).CurrentValues.SetValues(elemento);
+        context.SaveChanges();    
     }
 
     public List<Tercero> Listar()

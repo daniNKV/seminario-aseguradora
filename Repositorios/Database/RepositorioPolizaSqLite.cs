@@ -33,11 +33,16 @@ public class RepositorioPolizaSqLite : IRepositorioPoliza
             context.SaveChanges();
         } 
 
-    }    
+    }
 
     public void Modificar(Poliza elemento)
     {
-        throw new NotImplementedException();
+        using var context = new AseguradoraContexto();
+        var entidadExistente = context.Polizas.FirstOrDefault(e => e.Id == elemento.Id);
+        if (entidadExistente == null) return;
+        context.Entry(entidadExistente).State = EntityState.Modified;
+        context.Entry(entidadExistente).CurrentValues.SetValues(elemento);
+        context.SaveChanges();
     }
 
     public List<Poliza> Listar()
@@ -47,10 +52,10 @@ public class RepositorioPolizaSqLite : IRepositorioPoliza
         return polizas;
     }
 
-    public Poliza? ObtenerPolizaDeVehiculo(Vehiculo vehiculo)
+    public Poliza ObtenerPolizaDeVehiculo(Vehiculo vehiculo)
     {
         using var context = new AseguradoraContexto();
-        var poliza = context.Polizas.Single(p => p.VehiculoAsegurado.Id == vehiculo.Id);
+        var poliza = context.Polizas.Single(p => p.VehiculoAsegurado != null && p.VehiculoAsegurado.Id == vehiculo.Id);
         return poliza;
     }
 

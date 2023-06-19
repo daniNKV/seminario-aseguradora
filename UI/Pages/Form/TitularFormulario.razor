@@ -101,9 +101,7 @@
             ModificarTitular.Ejecutar(_titular);
             Snackbar?.Add("Modificado!");
         }
-        
         Navegador.NavigateTo($"/lista/titulares/{_titular.Id}");
-
     }
     
     public class TitularesFluentValidator : AbstractValidator<Titular>

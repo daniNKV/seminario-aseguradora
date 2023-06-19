@@ -36,7 +36,12 @@ public class RepositorioTitularSqLite : IRepositorioTitular
 
     public void Modificar(Titular elemento)
     {
-        throw new NotImplementedException();
+        using var context = new AseguradoraContexto();
+        var entidadExistente = context.Titulares.FirstOrDefault(e => e.Id == elemento.Id);
+        if (entidadExistente == null) return;
+        context.Entry(entidadExistente).State = EntityState.Modified;
+        context.Entry(entidadExistente).CurrentValues.SetValues(elemento);
+        context.SaveChanges();        
     }
 
     public List<Titular> Listar()
