@@ -20,7 +20,7 @@ public class RepositorioPolizaTxt: IRepositorioPoliza
         writer.WriteLine($"Valor Asegurado: {poliza.ValorAsegurado}");
         writer.WriteLine($"Inicio Vigencia: {poliza.InicioVigencia}");
         writer.WriteLine($"Fin Vigencia: {poliza.FinVigencia}");
-        writer.WriteLine($"Elemento Asegurado: {poliza.ElementoAsegurado}");
+        writer.WriteLine($"Elemento Asegurado: {poliza.VehiculoAsegurado}");
     }
 
     public void Eliminar(int polizaId)
@@ -79,7 +79,7 @@ public class RepositorioPolizaTxt: IRepositorioPoliza
                     Marca = camposAsegurado[3],
                     Fabricacion = camposAsegurado[4]
                 };
-                poliza.ElementoAsegurado = vehiculo;
+                poliza.VehiculoAsegurado = vehiculo;
             }
             reader.ReadLine();
             polizas.Add(poliza);
@@ -99,7 +99,7 @@ public class RepositorioPolizaTxt: IRepositorioPoliza
             writer.WriteLine($"Valor Asegurado: {poliza.ValorAsegurado}");
             writer.WriteLine($"Inicio Vigencia: {poliza.InicioVigencia}");
             writer.WriteLine($"Fin Vigencia: {poliza.FinVigencia}");
-            writer.WriteLine($"Elemento Asegurado: {poliza.ElementoAsegurado}");
+            writer.WriteLine($"Elemento Asegurado: {poliza.VehiculoAsegurado}");
         }
     }
 

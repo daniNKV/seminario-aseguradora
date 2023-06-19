@@ -1,5 +1,6 @@
 using Aplicacion.Entidades;
 using Aplicacion.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repositorios.Database;
 
@@ -24,6 +25,8 @@ public class RepositorioVehiculoSqLite : IRepositorioVehiculo
 
     public List<Vehiculo> Listar()
     {
-        throw new NotImplementedException();
+        using var context = new AseguradoraContexto();
+        var vehiculos = context.Vehiculos.Include(x => x.Titular).ToList();
+        return vehiculos;        
     }
 }

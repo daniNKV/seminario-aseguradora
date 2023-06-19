@@ -13,32 +13,31 @@ public class Poliza
     public int Id { get; set; }
     public string TipoCobertura { get; set; } = "Indefinido";
     public double Franquicia { get; set; } = -1;
-    public int ElementoAseguradoId { get; set; } = -1;
-    public Vehiculo? ElementoAsegurado { get; set; }
+    public int VehiculoAseguradoId { get; set; } = -1;
+    public Vehiculo? VehiculoAsegurado { get; set; }
     public double ValorAsegurado { get; set; } = -1;
     public string InicioVigencia { get; set; } = "Indefinido";
     public string FinVigencia { get; set; } = "Indefinido";
     
     public Poliza() {
-        Id = -1;
     }
 
-    public Poliza(string cobertura, Vehiculo elementoAsegurado) {
+    public Poliza(string cobertura, Vehiculo vehiculoAsegurado) {
         TipoCobertura = cobertura;
-        ElementoAsegurado = elementoAsegurado;
+        VehiculoAsegurado = vehiculoAsegurado;
     }
-    public Poliza(string cobertura, double franquicia, Vehiculo elementoAsegurado, double valorAsegurado, string inicio) {
+    public Poliza(string cobertura, double franquicia, Vehiculo vehiculoAsegurado, double valorAsegurado, string inicio) {
         Id = -1;
         TipoCobertura = cobertura;
         Franquicia = franquicia;
-        ElementoAsegurado = elementoAsegurado;
+        VehiculoAsegurado = vehiculoAsegurado;
         ValorAsegurado = valorAsegurado;
         InicioVigencia = inicio;
     }
 
     public override string ToString()
     {
-        return $"{Id},{TipoCobertura},{Franquicia},{ValorAsegurado},{InicioVigencia},{FinVigencia},{ElementoAsegurado}";
+        return $"{Id},{TipoCobertura},{Franquicia},{ValorAsegurado},{InicioVigencia},{FinVigencia},{VehiculoAsegurado}";
     }
 
 }
