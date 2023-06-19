@@ -1,6 +1,5 @@
 
 using Aplicacion.Interfaces;
-using Aplicacion.UseCases;
 using Aplicacion.UseCases.Polizas;
 using Aplicacion.UseCases.Titulares;
 using Aplicacion.UseCases.Terceros;
@@ -30,6 +29,7 @@ builder.Services.AddTransient<ListarPolizasUseCase>();
 builder.Services.AddTransient<EliminarPolizaUseCase>();
 builder.Services.AddTransient<ModificarPolizaUseCase>();
 builder.Services.AddTransient<ObtenerPolizaUseCase>();
+builder.Services.AddTransient<ObtenerPolizaDeVehiculoUseCase>();
 builder.Services.AddScoped<IRepositorioPoliza, RepositorioPolizaSqLite>();
 
 // Asegurables

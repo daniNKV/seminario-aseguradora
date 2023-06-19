@@ -1,14 +1,22 @@
-@page "/form/polizas"
+@page "/form/polizas/{Id:int?}"
 @using MudBlazor
 @using FluentValidation
 @using Aplicacion.UseCases.Polizas
 
 @inject AgregarPolizaUseCase AgregarPoliza
 @inject ModificarPolizaUseCase ModificarPoliza
-
+@inject ObtenerPolizaUseCase ObtenerPoliza
 
 <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-2">
-    <MudCard>
+    @if (_esNuevaPoliza)
+    {
+        <h3>Agregando nueva Poliza!</h3>
+    }
+    else
+    {
+        <h3>Modificando poliza de vehiculo ID: "@_poliza.VehiculoAseguradoId"</h3>
+    }
+    <MudCard Class="mt-6">
         <MudForm Model="@_poliza" @ref="@_form" Validation="@(_polizasValidator.ValidateValue)" ValidationDelay="0">
             <MudCardContent>
                 <MudNumericField
@@ -16,14 +24,14 @@
                     Variant="Variant.Text" Min="0"
                     @bind-Value="_poliza.VehiculoAseguradoId"
                     For="@(() => _poliza.VehiculoAseguradoId)"/>
-                
+
                 <MudSelect T="string" Label="Tipo Cobertura" AnchorOrigin="Origin.BottomCenter"
-                       @bind-Value="_poliza.TipoCobertura"
-                       For="@(() => _poliza.TipoCobertura)">
-                    <MudSelectItem Value="@("Responsabilidad Civil")" />
-                    <MudSelectItem Value="@("Franquicia")" />
+                           @bind-Value="_poliza.TipoCobertura"
+                           For="@(() => _poliza.TipoCobertura)">
+                    <MudSelectItem Value="@("Responsabilidad Civil")"/>
+                    <MudSelectItem Value="@("Franquicia")"/>
                 </MudSelect>
-                
+
                 <MudNumericField
                     Label="Valor Asegurado"
                     Variant="Variant.Text" Min="0"
@@ -41,10 +49,10 @@
 
             </MudCardContent>
             <MudCardActions>
-                <MudButton Variant="Variant.Filled" Color="Color.Secondary" DisableElevation="true" OnClick="@(()=>_form.Validate())">Validar</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary" DisableElevation="true" OnClick="@(() => _form.Validate())">Validar</MudButton>
 
                 <MudButton
-                    OnClick="@(() => Submit())"
+                    OnClick="@(Submit)"
                     Variant="Variant.Filled"
                     Color="Color.Primary"
                     Class="ml-4">Agregar!</MudButton>
@@ -54,23 +62,38 @@
     </MudCard>
 
 </MudContainer>
+
 @code {
+    [Parameter] public int? Id { get; set; }
     [Inject] ISnackbar Snackbar { get; set; }
-    Poliza _poliza = new Poliza();
+    Poliza? _poliza = new ();
     MudForm _form;
+    readonly PolizasFluentValidator _polizasValidator = new ();
+    bool _esNuevaPoliza=true;
     
-	PolizasFluentValidator _polizasValidator = new PolizasFluentValidator();
-
-    
-
+    protected override void OnParametersSet()
+    {
+        if (Id == null) return;
+        
+        var polizaEncontrada = ObtenerPoliza.Ejecutar(Id.Value);
+        _poliza = polizaEncontrada;
+        _esNuevaPoliza=false;
+    }
     private void Submit()
     {
         _form.Validate();
 
-        if (_form.IsValid)
+        if (!_form.IsValid) return;
+        
+        if (_esNuevaPoliza)
         {
-            Snackbar?.Add("Agregado!");
             AgregarPoliza.Ejecutar(_poliza);
+            Snackbar?.Add("Agregado!");
+        }
+        else
+        {
+            ModificarPoliza.Ejecutar(_poliza);
+            Snackbar?.Add("Modificado!");
         }
     }
     
@@ -85,7 +108,7 @@
             RuleFor(x => x.TipoCobertura)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .Length(1, 20);
+                .Length(1, 30);
 
             RuleFor(x => x.ValorAsegurado)
                 .NotEmpty()

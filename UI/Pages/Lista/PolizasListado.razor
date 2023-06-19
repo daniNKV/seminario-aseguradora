@@ -3,7 +3,8 @@
 @inject ListarPolizasUseCase ListarPolizas
 @inject ModificarPolizaUseCase ModificarPoliza
 @inject EliminarPolizaUseCase EliminarPoliza
-@page "/lista/polizas"
+@page "/lista/polizas/{Id:int?}"
+
 
 <MudContainer Fixed="true">
     <MudDataGrid Items="@_polizas" xs="12" sm="7" QuickFilter="@QuickFilter">
@@ -64,15 +65,23 @@
 </MudContainer>
 
 @code { 
+    [Parameter] public int? Id { get; set; }
+
     private IEnumerable<Poliza>? _polizas = new List<Poliza>();
     private string? _searchString;
-    private bool _sortNameByLength;
+    private const bool SortNameByLength = true;
     //DialogoConfirmacion dialogo = null!;
     Poliza? _polizaAEliminar = null;
     
     protected override void OnInitialized()
     {
         _polizas = ListarPolizas.Ejecutar();
+    }
+    
+    protected override void OnParametersSet()
+    {
+        if (Id == null) return;
+        _searchString = Id.ToString();
     }
     
 /*
