@@ -128,7 +128,7 @@ Console.WriteLine("DEMO POLIZAS");
 Console.WriteLine("################################################");
 
 // Instancia de Poliza
-var poliza = new Poliza("TodoRiesgo", 2000.0, new Vehiculo(), 2000.00, "22/05/2020");
+var poliza = new Poliza("TodoRiesgo", 2000.0, new Vehiculo(), 2000.00, DateTime.Parse("22/05/2020"));
 Console.WriteLine($"Id de la poliza recién instanciada: {poliza.Id}");
 
 // Guardar instancia en repositorio
@@ -137,8 +137,8 @@ Console.WriteLine($"Id de la poliza una vez persistida: {poliza.Id}");
 
 // Agrega Polizas
 PersistirPoliza(new Poliza("TodoRiesgo", new Vehiculo()));
-PersistirPoliza(new Poliza("ResponsabilidadCivil", 4000.0, new Vehiculo(), 1000.00, "24/02/2021"));
-PersistirPoliza(new Poliza("TodoRiesgo", 5000.0, new Vehiculo(), 2000.00, "22/01/2023"));
+PersistirPoliza(new Poliza("ResponsabilidadCivil", 4000.0, new Vehiculo(), 1000.00, DateTime.Parse("(24/02/2021")));
+PersistirPoliza(new Poliza("TodoRiesgo", 5000.0, new Vehiculo(), 2000.00, DateTime.Parse("22/01/2023")));
 
 // //listamos las polizas utilizando un método local
 ListarPolizas();
