@@ -31,9 +31,18 @@
             <TemplateColumn CellClass="d-flex justify-start" Title="Acciones">
                 <CellTemplate>
                     <MudStack Row Class="-my-4">
-                        <MudButton OnClick="@(() => { if (@context.Item != null) {VerPoliza(@context.Item.Poliza); } })" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Primary">Ver Poliza</MudButton>
-                        <MudButton OnClick="@(() => Modificar(@context.Item))" Size="Size.Small" Variant="Variant.Filled" Color="Color.Primary">Editar</MudButton>
-                        <MudButton OnClick="@(() => ConfirmarEliminacion(@context.Item))" Size="Size.Small" Variant="Variant.Filled" Color="Color.Error">Eliminar</MudButton>
+                        <MudButton 
+                        OnClick="@(() => VerPoliza(@context.Item.PolizaId))" 
+                        Size="Size.Small" Variant="Variant.Outlined" 
+                            Color="Color.Primary">Ver Poliza</MudButton>
+                        <MudButton 
+                            OnClick="@(() => Modificar(@context.Item))" 
+                            Size="Size.Small" Variant="Variant.Filled" 
+                            Color="Color.Primary">Editar</MudButton>
+                        <MudButton 
+                            OnClick="@(() => ConfirmarEliminacion(@context.Item))" 
+                            Size="Size.Small" Variant="Variant.Filled" 
+                            Color="Color.Error">Eliminar</MudButton>
                     </MudStack>
                 </CellTemplate>
             </TemplateColumn>
@@ -139,9 +148,9 @@
         return false;
     };
     
-    private void VerPoliza(Poliza item)
+    private void VerPoliza(int id)
     {
-        Navegador.NavigateTo($"/lista/polizas/{item.Id}");
+        Navegador.NavigateTo($"/lista/polizas/{id}");
     }
     
 }
