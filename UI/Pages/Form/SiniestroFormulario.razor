@@ -102,13 +102,10 @@
         Navegador.NavigateTo($"/lista/siniestros/{_siniestro.Id}");
     }
     
-    private bool ValidarFecha(Siniestro siniestro)
+    private static bool ValidarFecha(Siniestro siniestro)
     {
-        var poliza = ObtenerPolizaDeSiniestro.Ejecutar(siniestro) ?? throw new ArgumentNullException("ObtenerPolizaDeSiniestro.Ejecutar(siniestro)");
-        
-        if (poliza.FinVigencia < siniestro.FechaSuceso)
+        if (siniestro.Poliza?.FinVigencia < siniestro.FechaSuceso)
         {
-            Snackbar?.Add("La poliza esta vencida!");
             return false;
         }
         return true;
@@ -122,8 +119,9 @@
                 .NotEmpty()
                 .GreaterThanOrEqualTo(1);
 
-            RuleFor(x => x.FechaSuceso)
-                .NotEmpty();
+            RuleFor(x => x)
+                .Must(ValidarFecha)
+                .WithMessage("La fecha del siniestro debe ser anterior al vencimiento de Poliza");;
 
             RuleFor(x => x.Direccion)
                 .NotEmpty()
