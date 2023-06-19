@@ -92,7 +92,12 @@ public class RepositorioPolizaTxt: IRepositorioPoliza
 
         return polizas;
     }
-    
+
+    public Poliza? ObtenerPolizaDeVehiculo(Vehiculo vehiculo)
+    {
+        throw new NotImplementedException();
+    }
+
     private static void EscribirTodas(List<Poliza> polizas)
     {
         using var writer = new StreamWriter(NombreArchivo, false);

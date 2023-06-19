@@ -39,5 +39,12 @@ public class RepositorioPolizaSqLite : IRepositorioPoliza
         var polizas = context.Polizas.Include(p => p.VehiculoAsegurado).ToList();
         return polizas;
     }
+
+    public Poliza? ObtenerPolizaDeVehiculo(Vehiculo vehiculo)
+    {
+        using var context = new AseguradoraContexto();
+        var poliza = context.Polizas.Single(p => p.VehiculoAsegurado.Id == vehiculo.Id);
+        return poliza;
+    }
 }
 

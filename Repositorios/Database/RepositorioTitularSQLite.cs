@@ -24,7 +24,14 @@ public class RepositorioTitularSqLite : IRepositorioTitular
 
     public void Eliminar(int id)
     {
-        throw new NotImplementedException();
+        using var context = new AseguradoraContexto();
+        
+        var titularAEliminar = context.Titulares.FirstOrDefault(t => t.Id == id);
+        if (titularAEliminar != null)
+        {
+            context.Titulares.Remove(titularAEliminar);
+            context.SaveChanges();
+        }
     }
 
     public void Modificar(Titular elemento)
