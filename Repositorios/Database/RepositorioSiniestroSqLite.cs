@@ -26,14 +26,10 @@ public class RepositorioSiniestroSqLite : IRepositorioSiniestro
     public List<Siniestro> Listar()
     {
         using var context = new AseguradoraContexto();
-        var siniestros = context.Siniestros.Include(s => s.Poliza).ToList();
-        return siniestros;        
-    }
-    
-    public List<Siniestro> ListarSiniestrosConSusTerceros()
-    {
-        using var context = new AseguradoraContexto();
-        var siniestros = context.Siniestros.ToList();
+        var siniestros = context.Siniestros
+            .Include(s => s.Poliza)
+            .Include(s => s.Terceros)
+            .ToList();
         return siniestros;        
     }
 
