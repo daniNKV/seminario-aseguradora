@@ -1,0 +1,110 @@
+@using MudBlazor
+@using Aplicacion.UseCases.Terceros
+@inject ListarTercerosUseCase ListarTerceros
+@inject ModificarTerceroUseCase ModificarTercero
+@inject EliminarTerceroUseCase EliminarTercero
+@page "/lista/terceros"
+
+<MudContainer Fixed="true">
+    <MudDataGrid Items="@_terceros" xs="12" sm="7" QuickFilter="@QuickFilter">
+        <ToolBarContent>
+            <MudText Typo="Typo.h4">Terceros</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+            
+        <Columns>
+            <HierarchyColumn T="Tercero" ButtonDisabledFunc="@(t => t.Siniestro == null)"/>
+            <PropertyColumn Property="p => p.Id" Title="ID"/>
+            <PropertyColumn Property="p => p.Nombre"/>
+            <PropertyColumn Property="x => x.Dni" Title="DNI"/>
+            <PropertyColumn Property="x => x.Aseguradora"/>
+            <PropertyColumn Property="x => x.SiniestroId" Title="Siniestro ID"/>
+
+            <TemplateColumn CellClass="d-flex justify-start" Title="Acciones">
+                <CellTemplate>
+                    <MudStack Row Class="-my-4">
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" aria-label="add to favorite"></MudIconButton>
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete"></MudIconButton>
+                    </MudStack>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+        
+        <ChildRowContent>
+            <MudContainer Fixed="true">
+                <MudSimpleTable Style="overflow-x: auto;">
+                    <thead>
+                        <th>ID</th>
+                        <th>Fecha Ingreso</th>
+                        <th>Fecha Suceso</th>
+                        <th>Direccion</th>
+                        <th>Acción</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@context.Item.Siniestro?.Id</td>
+                            <td>@context.Item.Siniestro?.FechaIngreso</td>
+                            <td>@context.Item.Siniestro?.FechaSuceso</td>
+                            <td>@context.Item.Siniestro?.Direccion</td>
+
+                            <td><MudButton Size="Size.Small" Variant="Variant.Outlined" Color="Color.Primary">Ver Siniestro</MudButton></td>
+                        </tr>
+                    </tbody>
+                </MudSimpleTable>
+            </MudContainer>
+        </ChildRowContent>
+
+        <PagerContent>
+            <MudDataGridPager T="Tercero"/>
+        </PagerContent>
+    </MudDataGrid>
+</MudContainer>
+
+@code { 
+    private IEnumerable<Tercero>? _terceros = new List<Tercero>();
+    private string? _searchString;
+    private bool _sortNameByLength;
+    //DialogoConfirmacion dialogo = null!;
+    Tercero? _terceroAEliminar = null;
+    
+    
+    protected override void OnInitialized()
+    {
+        _terceros = ListarTerceros.Ejecutar();
+    }
+
+    private Func<Tercero, bool> QuickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (x.Nombre.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.Apellido.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ($"{x.Id}".Contains(_searchString))
+            return true;
+
+        return false;
+    };
+/*
+    private void ConfirmarEliminacion(Cliente cli)
+    {
+        _clienteParaEliminar = cli;
+        dialogo.Mensaje = $"¿Desea eliminar al cliente {cli.Nombre} {cli.Apellido}?";
+        dialogo.Mostrar();
+    }
+    private void Eliminar()
+    {
+        if (_clienteParaEliminar != null)
+        {
+            EliminarClienteUseCase.Ejecutar(_clienteParaEliminar.Id);
+            _lista = ListarClientesUseCase.Ejecutar(); //se actualiza la lista de clientes
+        }
+    }
+*/
+
+}

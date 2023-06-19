@@ -1,5 +1,6 @@
 using Aplicacion.Entidades;
 using Aplicacion.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repositorios.Database;
 
@@ -24,6 +25,7 @@ public class RepositorioTerceroSqLite : IRepositorioTercero
 
     public List<Tercero> Listar()
     {
-        throw new NotImplementedException();
-    }
+        using var context = new AseguradoraContexto();
+        var terceros = context.Terceros.Include(t => t.Siniestro).ToList();
+        return terceros;         }
 }
