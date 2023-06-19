@@ -1,11 +1,13 @@
 @using MudBlazor
 @using Aplicacion.Entidades
 @using Aplicacion.UseCases.Titulares
-@inject ListarTitularesConSusAsegurablesUseCase ListarTitularesConSusVehiculosUseCase
+@inject ListarTitularesConSusVehiculosUseCase ListarTitularesConSusVehiculosUseCase
+@inject ModificarTitularUseCase ModificarTitularUseCase
+@inject EliminarTitularUseCase EliminarTitularUseCase
 @page "/lista/titulares"
 
 <MudContainer Fixed="true">
-    <MudDataGrid Items="@_titulares" xs="12" sm="7" QuickFilter="@_quickFilter">
+    <MudDataGrid Items="@_titulares" xs="12" sm="7" QuickFilter="@QuickFilter">
         <ToolBarContent>
             <MudText Typo="Typo.h4">Titulares</MudText>
             <MudSpacer />
@@ -13,13 +15,14 @@
         </ToolBarContent>
             
         <Columns>
-            <PropertyColumn Property="p => p.Nombre" Title="Nombre"/>
-            <PropertyColumn Property="x => x.Apellido" Title="Apellido"/>
-            <PropertyColumn Property="x => x.Direccion" Title="Direccion" Sortable="false"/>
+            <PropertyColumn Property="p => p.Id" Title="ID"/>
+            <PropertyColumn Property="p => p.Nombre"/>
+            <PropertyColumn Property="x => x.Apellido"/>
+            <PropertyColumn Property="x => x.Direccion" Sortable="false"/>
             <PropertyColumn Property="x => x.Dni" Title="DNI" Sortable="false"/>
-            <PropertyColumn Property="x => x.Telefono" Title="Telefono" Sortable="false"/>
+            <PropertyColumn Property="x => x.Telefono" Sortable="false"/>
             <PropertyColumn Property="x => x.Email" Title="Email" Sortable="false"/>
-            <HierarchyColumn T="Titular" ButtonDisabledFunc="@(x => !x.ItemsAsegurados?.Any() ?? false)" />
+            <HierarchyColumn T="Titular" ButtonDisabledFunc="@(x => !x.ItemsAsegurados?.Any() ?? false)"/>
 
             <TemplateColumn CellClass="d-flex justify-start" Title="Acciones">
                 <CellTemplate>
@@ -44,7 +47,6 @@
                             </CellTemplate>
                         </TemplateColumn>
                     </Columns>
-
                 </MudDataGrid>
             </MudContainer>
         </ChildRowContent>
@@ -52,20 +54,37 @@
             <MudDataGridPager T="Titular" />
         </PagerContent>
     </MudDataGrid>
-    
 </MudContainer>
 
 @code { 
     private IEnumerable<Titular>? _titulares = new List<Titular>();
     private string? _searchString;
     private bool _sortNameByLength;
+    //DialogoConfirmacion dialogo = null!;
+    Titular? _titularAEliminar = null;
     
     protected override void OnInitialized()
     {
         _titulares = ListarTitularesConSusVehiculosUseCase.Ejecutar();
     }
-
-    private Func<Titular, object> _sortBy => x =>
+    
+/*
+    private void ConfirmarEliminacion(Cliente cli)
+    {
+        _clienteParaEliminar = cli;
+        dialogo.Mensaje = $"¿Desea eliminar al cliente {cli.Nombre} {cli.Apellido}?";
+        dialogo.Mostrar();
+    }
+    private void Eliminar()
+    {
+        if (_clienteParaEliminar != null)
+        {
+            EliminarClienteUseCase.Ejecutar(_clienteParaEliminar.Id);
+            _lista = ListarClientesUseCase.Ejecutar(); //se actualiza la lista de clientes
+        }
+    }
+*/
+    private Func<Titular, object> SortBy => x =>
     {
         if (_sortNameByLength)
             return x.Nombre.Length;
@@ -73,7 +92,7 @@
             return x.Nombre;
     };
     
-    private Func<Titular, bool> _quickFilter => x =>
+    private Func<Titular, bool> QuickFilter => x =>
     {
         if (string.IsNullOrWhiteSpace(_searchString))
             return true;
