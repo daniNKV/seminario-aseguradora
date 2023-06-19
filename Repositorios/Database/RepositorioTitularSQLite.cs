@@ -6,6 +6,15 @@ namespace Repositorios.Database;
 
 public class RepositorioTitularSqLite : IRepositorioTitular
 {
+    public Titular? Obtener(int id)
+    {
+        using var context = new AseguradoraContexto();
+        var titular = context.Titulares
+            .Include(s => s.ItemsAsegurados)
+            .FirstOrDefault(s => s.Id == id);
+        return titular;
+    }
+
     public void Agregar(Titular elemento)
     {
         using var context = new AseguradoraContexto();

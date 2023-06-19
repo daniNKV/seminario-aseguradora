@@ -29,6 +29,7 @@ builder.Services.AddTransient<AgregarPolizaUseCase>();
 builder.Services.AddTransient<ListarPolizasUseCase>();
 builder.Services.AddTransient<EliminarPolizaUseCase>();
 builder.Services.AddTransient<ModificarPolizaUseCase>();
+builder.Services.AddTransient<ObtenerPolizaUseCase>();
 builder.Services.AddScoped<IRepositorioPoliza, RepositorioPolizaSqLite>();
 
 // Asegurables
@@ -36,6 +37,8 @@ builder.Services.AddTransient<AgregarVehiculoUseCase>();
 builder.Services.AddTransient<ListarVehiculosUseCase>();
 builder.Services.AddTransient<EliminarVehiculoUseCase>();
 builder.Services.AddTransient<ModificarVehiculoUseCase>();
+builder.Services.AddTransient<ObtenerVehiculoUseCase>();
+
 builder.Services.AddScoped<IRepositorioVehiculo, RepositorioVehiculoSqLite>();
 
 // Titulares
@@ -44,6 +47,8 @@ builder.Services.AddTransient<ListarTitularesUseCase>();
 builder.Services.AddTransient<ListarTitularesConSusVehiculosUseCase>();
 builder.Services.AddTransient<EliminarTitularUseCase>();
 builder.Services.AddTransient<ModificarTitularUseCase>();
+builder.Services.AddTransient<ObtenerTitularUseCase>();
+
 builder.Services.AddScoped<IRepositorioTitular, RepositorioTitularSqLite>();
 
 // Siniestros
@@ -51,6 +56,8 @@ builder.Services.AddTransient<AgregarSiniestroUseCase>();
 builder.Services.AddTransient<ListarSiniestrosUseCase>();
 builder.Services.AddTransient<EliminarSiniestroUseCase>();
 builder.Services.AddTransient<ModificarSiniestroUseCase>();
+builder.Services.AddTransient<ObtenerSiniestroUseCase>();
+
 builder.Services.AddScoped<IRepositorioSiniestro, RepositorioSiniestroSqLite>();
 
 // Terceros
@@ -58,6 +65,8 @@ builder.Services.AddTransient<AgregarTerceroUseCase>();
 builder.Services.AddTransient<ListarTercerosUseCase>();
 builder.Services.AddTransient<EliminarTerceroUseCase>();
 builder.Services.AddTransient<ModificarTerceroUseCase>();
+builder.Services.AddTransient<ObtenerTerceroUseCase>();
+
 builder.Services.AddScoped<IRepositorioTercero, RepositorioTerceroSqLite>();
 
 using var context = new AseguradoraContexto();

@@ -8,6 +8,11 @@ public class RepositorioPolizaTxt: IRepositorioPoliza
 {
     private const string NombreArchivo = "polizas.txt";
 
+    public Poliza Obtener(int id)
+    {
+        throw new NotImplementedException();
+    }
+
     public void Agregar(Poliza poliza)
     {
         Poliza.CantidadPolizas++;

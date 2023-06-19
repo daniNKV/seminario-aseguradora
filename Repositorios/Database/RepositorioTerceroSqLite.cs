@@ -6,6 +6,15 @@ namespace Repositorios.Database;
 
 public class RepositorioTerceroSqLite : IRepositorioTercero
 {
+    public Tercero? Obtener(int id)
+    {
+        using var context = new AseguradoraContexto();
+        var tercero = context.Terceros
+            .Include(t => t.Siniestro)
+            .FirstOrDefault(t => t.Id == id);
+        return tercero;    
+    }
+
     public void Agregar(Tercero elemento)
     {
         using var context = new AseguradoraContexto();

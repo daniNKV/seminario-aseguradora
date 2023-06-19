@@ -6,6 +6,16 @@ namespace Repositorios.Database;
 
 public class RepositorioSiniestroSqLite : IRepositorioSiniestro
 {
+    public Siniestro? Obtener(int id)
+    {
+        using var context = new AseguradoraContexto();
+        var siniestro = context.Siniestros
+            .Include(s => s.Poliza)
+            .FirstOrDefault(s => s.Id == id);
+        return siniestro;
+        
+    }
+
     public void Agregar(Siniestro elemento)
     {
         using var context = new AseguradoraContexto();

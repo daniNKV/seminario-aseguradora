@@ -6,6 +6,16 @@ namespace Repositorios.Database;
 
 public class RepositorioVehiculoSqLite : IRepositorioVehiculo
 {
+    public Vehiculo? Obtener(int id)
+    {
+        using var context = new AseguradoraContexto();
+        var vehiculo = context.Vehiculos
+            .Include(v => v.Titular)
+            .FirstOrDefault(s => s.Id == id);
+        return vehiculo;
+        
+    }
+
     public void Agregar(Vehiculo elemento)
     {
         using var context = new AseguradoraContexto();

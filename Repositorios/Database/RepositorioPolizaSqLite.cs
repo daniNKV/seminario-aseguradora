@@ -7,6 +7,15 @@ namespace Repositorios.Database;
 
 public class RepositorioPolizaSqLite : IRepositorioPoliza
 {
+    public Poliza? Obtener(int id)
+    {
+        using var context = new AseguradoraContexto();
+        var poliza = context.Polizas
+            .Include(p => p.VehiculoAsegurado)
+            .FirstOrDefault(p => p.Id == id);
+        return poliza;
+    }
+
     public void Agregar(Poliza elemento)
     {
         using var context = new AseguradoraContexto();

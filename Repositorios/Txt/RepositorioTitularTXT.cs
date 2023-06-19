@@ -7,6 +7,11 @@ public class RepositorioTitularTxt: IRepositorioTitular
 {
     private const string NombreArchivo = "titulares.txt";
 
+    public Titular Obtener(int id)
+    {
+        throw new NotImplementedException();
+    }
+
     public void Agregar(Titular titular)
     {   
         if (File.Exists(NombreArchivo))

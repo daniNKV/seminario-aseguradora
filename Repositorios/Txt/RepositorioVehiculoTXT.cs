@@ -7,6 +7,11 @@ public class RepositorioVehiculoTxt: IRepositorioVehiculo
 {
     private const string NombreArchivo = "vehiculos.txt";
 
+    public Vehiculo Obtener(int id)
+    {
+        throw new NotImplementedException();
+    }
+
     public void Agregar(Vehiculo vehiculo)
     {
         Vehiculo.CantidadAsegurados++;
