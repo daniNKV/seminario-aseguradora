@@ -16,8 +16,8 @@ public class Poliza
     public int VehiculoAseguradoId { get; set; } = -1;
     public Vehiculo? VehiculoAsegurado { get; set; }
     public double ValorAsegurado { get; set; } = -1;
-    public string InicioVigencia { get; set; } = "Indefinido";
-    public string FinVigencia { get; set; } = "Indefinido";
+    public DateTime? InicioVigencia { get; set; }
+    public DateTime? FinVigencia { get; set; }
     
     public Poliza() {
     }
@@ -26,7 +26,7 @@ public class Poliza
         TipoCobertura = cobertura;
         VehiculoAsegurado = vehiculoAsegurado;
     }
-    public Poliza(string cobertura, double franquicia, Vehiculo vehiculoAsegurado, double valorAsegurado, string inicio) {
+    public Poliza(string cobertura, double franquicia, Vehiculo vehiculoAsegurado, double valorAsegurado, DateTime inicio) {
         Id = -1;
         TipoCobertura = cobertura;
         Franquicia = franquicia;

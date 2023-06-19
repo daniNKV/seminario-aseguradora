@@ -65,8 +65,8 @@ public class RepositorioPolizaTxt: IRepositorioPoliza
                 TipoCobertura = reader.ReadLine()?.Split(':')[1].Trim() ?? "",
                 Franquicia = Parse(reader.ReadLine()?.Split(':')[1].Trim() ?? "0.0"),
                 ValorAsegurado = Parse(reader.ReadLine()?.Split(':')[1].Trim() ?? "0.0"),
-                InicioVigencia = reader.ReadLine()?.Split(':')[1].Trim() ?? "",
-                FinVigencia = reader.ReadLine()?.Split(':')[1].Trim() ?? ""
+                InicioVigencia = DateTime.Parse(reader.ReadLine()?.Split(':')[1].Trim() ?? ""),
+                FinVigencia = DateTime.Parse(reader.ReadLine()?.Split(':')[1].Trim() ?? "")
             };
             var asegurado = reader.ReadLine()?.Split(':')[1].Trim() ?? "";
             if (asegurado != null) {
