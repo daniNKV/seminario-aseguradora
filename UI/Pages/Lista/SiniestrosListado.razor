@@ -1,12 +1,16 @@
 @using MudBlazor
 @using Aplicacion.UseCases.Siniestros
+@using Aplicacion.UseCases.Terceros
 @inject ListarSiniestrosUseCase ListarSiniestros
-@inject ModificarSiniestroUseCase ModificarSiniestro
 @inject EliminarSiniestroUseCase EliminarSiniestro
-@page "/lista/siniestros"
+@inject ObtenerTerceroUseCase ObtenerTercero
+@inject NavigationManager Navegador
+@inject IDialogService DialogService
+
+@page "/lista/siniestros/{Id:int?}"
 
 <MudContainer Fixed="true">
-    <MudDataGrid Items="@_siniestros" xs="12" sm="7" >
+    <MudDataGrid Items="@_siniestros" xs="12" sm="7" QuickFilter="@QuickFilter">
         <ToolBarContent>
             <MudText Typo="Typo.h4">Siniestros</MudText>
             <MudSpacer />
@@ -27,8 +31,8 @@
             <TemplateColumn CellClass="d-flex justify-start" Title="Acciones">
                 <CellTemplate>
                     <MudStack Row Class="-my-4">
-                        <MudIconButton Icon="@Icons.Material.Filled.Edit" aria-label="add to favorite"></MudIconButton>
-                        <MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete"></MudIconButton>
+                        <MudButton OnClick="@( () => Modificar(@context.Item))" Size="Size.Small" Variant="Variant.Filled" Color="Color.Primary">Editar</MudButton>
+                        <MudButton OnClick="@( () => ConfirmarEliminacion(@context.Item))" Size="Size.Small" Variant="Variant.Filled" Color="Color.Error">Eliminar</MudButton>
                     </MudStack>
                 </CellTemplate>
             </TemplateColumn>
@@ -44,7 +48,7 @@
                         <PropertyColumn Property="v => v.Dni"/>
                         <TemplateColumn CellClass="d-flex justify-start" Title="Acciones">
                             <CellTemplate Context="terceros">
-                                <MudButton Variant="Variant.Outlined" Color="Color.Primary">Ver Tercero</MudButton>
+                                <MudButton OnClick="@(() => VerTercero(@terceros.Item))" Variant="Variant.Outlined" Color="Color.Primary">Ver Tercero</MudButton>
                             </CellTemplate>
                         </TemplateColumn>
                     </Columns>
@@ -58,34 +62,73 @@
 </MudContainer>
 
 @code { 
+    [Parameter] public int? Id { get; set; }
     private IEnumerable<Siniestro>? _siniestros = new List<Siniestro>();
     private string? _searchString;
     private bool _sortNameByLength;
-    //DialogoConfirmacion dialogo = null!;
     Siniestro? _siniestroAEliminar = null;
+    
+    protected override void OnParametersSet()
+    {
+        if (Id == null) return;
+        _searchString = Id.ToString();
+    }
     
     protected override void OnInitialized()
     {
         _siniestros = ListarSiniestros.Ejecutar();
     }
     
-/*
-    private void ConfirmarEliminacion(Cliente cli)
+    async Task ConfirmarEliminacion(Siniestro cli)
     {
-        _clienteParaEliminar = cli;
-        dialogo.Mensaje = $"¿Desea eliminar al cliente {cli.Nombre} {cli.Apellido}?";
-        dialogo.Mostrar();
-    }
-    private void Eliminar()
-    {
-        if (_clienteParaEliminar != null)
+        _siniestroAEliminar = cli;
+        Console.WriteLine(_siniestroAEliminar);
+        var parametros = new DialogParameters
         {
-            EliminarClienteUseCase.Ejecutar(_clienteParaEliminar.Id);
-            _lista = ListarClientesUseCase.Ejecutar(); //se actualiza la lista de clientes
+            { "ContentText", $"Realmente quieres eliminar el siniestro {cli.Id}?" },
+            { "ButtonText", "Eliminar" },
+            { "Color", Color.Error },
+        };
+        
+        var options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            CloseButton = true, 
+            MaxWidth = MaxWidth.ExtraSmall,
+        };
+
+        var dialog = await DialogService.ShowAsync<Dialog>("Eliminar", parametros, options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            Eliminar();
         }
     }
-*/
     
+    private void Eliminar()
+    {
+        if (_siniestroAEliminar != null)
+        {
+            EliminarSiniestro.Ejecutar(_siniestroAEliminar.Id);
+            _siniestros = ListarSiniestros.Ejecutar(); 
+            StateHasChanged();
+
+        }
+    }
+    
+    private void VerTercero(Tercero tercero)
+    {
+        var _tercero = ObtenerTercero.Ejecutar(tercero.Id);
+        if (_tercero != null) Navegador.NavigateTo($"lista/terceros/{tercero.Id}");
+    }
+    
+    void Modificar(Siniestro cli)
+    {
+        Navegador.NavigateTo($"form/siniestros/{cli.Id}");
+    }
+    
+
     private Func<Siniestro, bool> QuickFilter => x =>
     {
         if (string.IsNullOrWhiteSpace(_searchString))

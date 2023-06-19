@@ -3,14 +3,22 @@
 @inject ListarVehiculosUseCase ListarVehiculos
 @inject ModificarVehiculoUseCase ModificarVehiculo
 @inject EliminarVehiculoUseCase EliminarVehiculo
-@page "/lista/vehiculos"
+@inject IDialogService DialogService
+@inject NavigationManager Navegador
+
+@page "/lista/vehiculos/{Id:int?}"
 
 <MudContainer Fixed="true">
     <MudDataGrid Items="@_vehiculos" xs="12" sm="7" QuickFilter="@QuickFilter">
         <ToolBarContent>
             <MudText Typo="Typo.h4">Vehiculos</MudText>
             <MudSpacer />
-            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudTextField 
+                @bind-Value="_searchString" 
+                Placeholder="Search" 
+                Adornment="Adornment.Start" 
+                Immediate="true" AdornmentIcon="@Icons.Material.Filled.Search" 
+                IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
             
         <Columns>
@@ -23,8 +31,14 @@
             <TemplateColumn CellClass="d-flex justify-start" Title="Acciones">
                 <CellTemplate>
                     <MudStack Row Class="-my-4">
-                        <MudIconButton Icon="@Icons.Material.Filled.Edit" aria-label="add to favorite"></MudIconButton>
-                        <MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete"></MudIconButton>
+                        <MudButton 
+                            OnClick="@( () => Modificar(@context.Item))" 
+                            Size="Size.Small" Variant="Variant.Filled" 
+                            Color="Color.Primary">Editar</MudButton>
+                        <MudButton 
+                            OnClick="@( () => ConfirmarEliminacion(@context.Item))" 
+                            Size="Size.Small" Variant="Variant.Filled" 
+                            Color="Color.Error">Eliminar</MudButton>
                     </MudStack>
                 </CellTemplate>
             </TemplateColumn>
@@ -49,7 +63,12 @@
                             <td>@context.Item.Titular?.Dni</td>
                             <td>@context.Item.Titular?.Direccion</td>
                             <td>@context.Item.Titular?.Email</td>
-                            <td><MudButton Size="Size.Small" Variant="Variant.Outlined" Color="Color.Primary">Ver Titular</MudButton></td>
+                            <td>
+                                <MudButton 
+                                    OnClick="@(() => VerTitular(@context.Item.Titular))" 
+                                    Size="Size.Small" Variant="Variant.Outlined" 
+                                    Color="Color.Primary">Ver Titular</MudButton>
+                            </td>
                         </tr>
                     </tbody>
                 </MudSimpleTable>
@@ -63,6 +82,7 @@
 </MudContainer>
 
 @code { 
+    [Parameter] public int? Id { get; set; }
     private IEnumerable<Vehiculo>? _vehiculos = new List<Vehiculo>();
     private string? _searchString;
     private bool _sortNameByLength;
@@ -73,6 +93,53 @@
     protected override void OnInitialized()
     {
         _vehiculos = ListarVehiculos.Ejecutar();
+    }
+    
+    private void VerTitular(Titular titular)
+    {
+        Navegador.NavigateTo($"lista/titulares/{titular.Id}");
+    }
+    
+    void Modificar(Vehiculo cli)
+    {
+        Navegador.NavigateTo($"form/titulares/{cli.Id}");
+    }
+
+    async Task ConfirmarEliminacion(Vehiculo cli)
+    {
+        _vehiculoAEliminar = cli;
+        Console.WriteLine(_vehiculoAEliminar.Id);
+        var parametros = new DialogParameters
+        {
+            { "ContentText", $"Realmente quieres eliminar el vehiculo {cli.Id}?" },
+            { "ButtonText", "Eliminar" },
+            { "Color", Color.Error },
+        };
+        
+        var options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            CloseButton = true, 
+            MaxWidth = MaxWidth.ExtraSmall,
+        };
+
+        var dialog = await DialogService.ShowAsync<Dialog>("Eliminar", parametros, options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            Eliminar();
+        }
+    }
+    
+    private void Eliminar()
+    {
+        if (_vehiculoAEliminar != null)
+        {
+            EliminarVehiculo.Ejecutar(_vehiculoAEliminar.Id);
+            _vehiculos = ListarVehiculos.Ejecutar(); 
+            StateHasChanged();
+        }
     }
 
     private Func<Vehiculo, bool> QuickFilter => x =>
@@ -91,21 +158,7 @@
 
         return false;
     };
-/*
-    private void ConfirmarEliminacion(Cliente cli)
-    {
-        _clienteParaEliminar = cli;
-        dialogo.Mensaje = $"¿Desea eliminar al cliente {cli.Nombre} {cli.Apellido}?";
-        dialogo.Mostrar();
-    }
-    private void Eliminar()
-    {
-        if (_clienteParaEliminar != null)
-        {
-            EliminarClienteUseCase.Ejecutar(_clienteParaEliminar.Id);
-            _lista = ListarClientesUseCase.Ejecutar(); //se actualiza la lista de clientes
-        }
-    }
-*/
+
+    
 
 }

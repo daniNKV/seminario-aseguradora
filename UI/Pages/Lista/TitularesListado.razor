@@ -7,6 +7,7 @@
 @inject ObtenerPolizaDeVehiculoUseCase ObtenerPolizaDeVehiculo
 @inject IDialogService DialogService
 
+
 @page "/lista/titulares/{Id:int?}"
 
 <MudContainer Fixed="true">
@@ -120,7 +121,9 @@
         {
             EliminarTitular.Ejecutar(_titularAEliminar.Id);
             _titulares = ListarTitularesConSusVehiculos.Ejecutar(); //se actualiza la lista de clientes
+            StateHasChanged();
         }
+        
     }
     private Func<Titular, object> SortBy => x =>
     {

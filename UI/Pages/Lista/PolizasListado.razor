@@ -1,8 +1,10 @@
 @using MudBlazor
 @using Aplicacion.UseCases.Polizas
 @inject ListarPolizasUseCase ListarPolizas
-@inject ModificarPolizaUseCase ModificarPoliza
 @inject EliminarPolizaUseCase EliminarPoliza
+@inject NavigationManager Navegador
+@inject IDialogService DialogService
+
 @page "/lista/polizas/{Id:int?}"
 
 
@@ -26,8 +28,8 @@
             <TemplateColumn CellClass="d-flex justify-start" Title="Acciones">
                 <CellTemplate>
                     <MudStack Row Class="-my-4">
-                        <MudIconButton Icon="@Icons.Material.Filled.Edit" aria-label="add to favorite"></MudIconButton>
-                        <MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete"></MudIconButton>
+                        <MudButton OnClick="@( () => Modificar(@context.Item))" Size="Size.Small" Variant="Variant.Filled" Color="Color.Primary">Editar</MudButton>
+                        <MudButton OnClick="@( () => ConfirmarEliminacion(@context.Item))" Size="Size.Small" Variant="Variant.Filled" Color="Color.Error">Eliminar</MudButton>
                     </MudStack>
                 </CellTemplate>
             </TemplateColumn>
@@ -51,7 +53,7 @@
                             <td>@context.Item.VehiculoAsegurado?.Fabricacion</td>
                             <td>@context.Item.VehiculoAsegurado?.TitularId</td>
                             <td>                                                
-                                <MudButton Size="Size.Small" Variant="Variant.Outlined" Color="Color.Primary">Ver Vehiculo</MudButton>
+                                <MudButton OnClick="@(() => VerVehiculo(@context.Item.VehiculoAsegurado))" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Primary">Ver Vehiculo</MudButton>
                             </td>
                         </tr>
                     </tbody>
@@ -71,7 +73,7 @@
     private string? _searchString;
     private const bool SortNameByLength = true;
     //DialogoConfirmacion dialogo = null!;
-    Poliza? _polizaAEliminar = null;
+    Poliza? _polizaAEliminar;
     
     protected override void OnInitialized()
     {
@@ -84,31 +86,54 @@
         _searchString = Id.ToString();
     }
     
-/*
-    private void ConfirmarEliminacion(Cliente cli)
+    private void VerVehiculo(Vehiculo vehiculo)
     {
-        _clienteParaEliminar = cli;
-        dialogo.Mensaje = $"¿Desea eliminar al cliente {cli.Nombre} {cli.Apellido}?";
-        dialogo.Mostrar();
+        Navegador.NavigateTo($"lista/vehiculos/{vehiculo.Id}");
     }
-    private void Eliminar()
+    
+    void Modificar(Poliza cli)
     {
-        if (_clienteParaEliminar != null)
-        {
-            EliminarClienteUseCase.Ejecutar(_clienteParaEliminar.Id);
-            _lista = ListarClientesUseCase.Ejecutar(); //se actualiza la lista de clientes
-        }
+        Navegador.NavigateTo($"form/titulares/{cli.Id}");
     }
 
-    
-    private Func<Poliza, object> SortBy => x =>
+    async Task ConfirmarEliminacion(Poliza cli)
     {
-        if (_sortNameByLength)
-            return x.Nombre.Length;
-        else
-            return x.Nombre;
-    };
-    */
+        _polizaAEliminar = cli;
+        Console.WriteLine(_polizaAEliminar.Id);
+        var parametros = new DialogParameters
+        {
+            { "ContentText", $"Realmente quieres eliminar la poliza {cli.Id}?" },
+            { "ButtonText", "Eliminar" },
+            { "Color", Color.Error },
+        };
+        
+        var options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            CloseButton = true, 
+            MaxWidth = MaxWidth.ExtraSmall,
+        };
+
+        var dialog = await DialogService.ShowAsync<Dialog>("Eliminar", parametros, options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            Eliminar();
+        }
+    }
+    
+    private void Eliminar()
+    {
+        if (_polizaAEliminar != null)
+        {
+            EliminarPoliza.Ejecutar(_polizaAEliminar.Id);
+            _polizas = ListarPolizas.Ejecutar(); 
+            StateHasChanged();
+
+        }
+    }
+    
     private Func<Poliza, bool> QuickFilter => x =>
     {
         if (string.IsNullOrWhiteSpace(_searchString))

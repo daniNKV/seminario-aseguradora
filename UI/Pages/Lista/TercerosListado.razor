@@ -1,9 +1,11 @@
 @using MudBlazor
 @using Aplicacion.UseCases.Terceros
 @inject ListarTercerosUseCase ListarTerceros
-@inject ModificarTerceroUseCase ModificarTercero
 @inject EliminarTerceroUseCase EliminarTercero
-@page "/lista/terceros"
+@inject NavigationManager Navegador
+@inject IDialogService DialogService
+
+@page "/lista/terceros/{Id:int?}"
 
 <MudContainer Fixed="true">
     <MudDataGrid Items="@_terceros" xs="12" sm="7" QuickFilter="@QuickFilter">
@@ -24,8 +26,14 @@
             <TemplateColumn CellClass="d-flex justify-start" Title="Acciones">
                 <CellTemplate>
                     <MudStack Row Class="-my-4">
-                        <MudIconButton Icon="@Icons.Material.Filled.Edit" aria-label="add to favorite"></MudIconButton>
-                        <MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete"></MudIconButton>
+                        <MudButton 
+                            OnClick="@( () => Modificar(@context.Item))" 
+                            Size="Size.Small" Variant="Variant.Filled" 
+                            Color="Color.Primary">Editar</MudButton>
+                        <MudButton 
+                            OnClick="@( () => ConfirmarEliminacion(@context.Item))" 
+                            Size="Size.Small" Variant="Variant.Filled" 
+                            Color="Color.Error">Eliminar</MudButton>
                     </MudStack>
                 </CellTemplate>
             </TemplateColumn>
@@ -47,8 +55,12 @@
                             <td>@context.Item.Siniestro?.FechaIngreso</td>
                             <td>@context.Item.Siniestro?.FechaSuceso</td>
                             <td>@context.Item.Siniestro?.Direccion</td>
-
-                            <td><MudButton Size="Size.Small" Variant="Variant.Outlined" Color="Color.Primary">Ver Siniestro</MudButton></td>
+                            <td>
+                                <MudButton 
+                                    OnClick="@(() => VerSiniestro(@context.Item))" 
+                                    Size="Size.Small" Variant="Variant.Outlined" 
+                                    Color="Color.Primary">Ver Siniestro</MudButton>
+                            </td>
                         </tr>
                     </tbody>
                 </MudSimpleTable>
@@ -62,17 +74,73 @@
 </MudContainer>
 
 @code { 
+    [Parameter] public int? Id { get; set; }
+
     private IEnumerable<Tercero>? _terceros = new List<Tercero>();
     private string? _searchString;
     private bool _sortNameByLength;
     //DialogoConfirmacion dialogo = null!;
     Tercero? _terceroAEliminar = null;
     
+    protected override void OnParametersSet()
+    {
+        if (Id == null) return;
+        _searchString = Id.ToString();
+    }
     
     protected override void OnInitialized()
     {
         _terceros = ListarTerceros.Ejecutar();
     }
+    
+    private void VerSiniestro(Tercero tercero)
+    {
+        Navegador.NavigateTo($"lista/siniestros/{tercero.SiniestroId}");
+    }
+    
+    void Modificar(Tercero cli)
+    {
+        Navegador.NavigateTo($"form/terceros/{cli.Id}");
+    }
+
+    async Task ConfirmarEliminacion(Tercero cli)
+    {
+        _terceroAEliminar = cli;
+        Console.WriteLine(_terceroAEliminar.Id);
+        var parametros = new DialogParameters
+        {
+            { "ContentText", $"Realmente quieres eliminar al tercero {cli.Id} involucardo en el siniestro {cli.SiniestroId}?" },
+            { "ButtonText", "Eliminar" },
+            { "Color", Color.Error },
+        };
+        
+        var options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            CloseButton = true, 
+            MaxWidth = MaxWidth.ExtraSmall,
+        };
+
+        var dialog = await DialogService.ShowAsync<Dialog>("Eliminar", parametros, options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            Eliminar();
+        }
+    }
+    
+    private void Eliminar()
+    {
+        if (_terceroAEliminar != null)
+        {
+            EliminarTercero.Ejecutar(_terceroAEliminar.Id);
+            _terceros = ListarTerceros.Ejecutar(); 
+            StateHasChanged();
+
+        }
+    }
+
 
     private Func<Tercero, bool> QuickFilter => x =>
     {
@@ -90,21 +158,6 @@
 
         return false;
     };
-/*
-    private void ConfirmarEliminacion(Cliente cli)
-    {
-        _clienteParaEliminar = cli;
-        dialogo.Mensaje = $"¿Desea eliminar al cliente {cli.Nombre} {cli.Apellido}?";
-        dialogo.Mostrar();
-    }
-    private void Eliminar()
-    {
-        if (_clienteParaEliminar != null)
-        {
-            EliminarClienteUseCase.Ejecutar(_clienteParaEliminar.Id);
-            _lista = ListarClientesUseCase.Ejecutar(); //se actualiza la lista de clientes
-        }
-    }
-*/
+
 
 }
