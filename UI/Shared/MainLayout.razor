@@ -4,13 +4,13 @@
 <PageTitle>Aseguradora</PageTitle>
 <MudThemeProvider/>
 <MudDialogProvider/>
-<MudSnackbarProvider/>
 
 <MudLayout>
-    <MudAppBar Elevation="1">
+    <MudAppBar Elevation="1" Color="Color.Dark">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         <MudSpacer />
         <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
+        
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" Elevation="2">
         <MudDrawerHeader>
@@ -21,7 +21,7 @@
             <MudDivider Class="my-2"/>
             <MudNavLink Icon="@Icons.Material.Filled.SpaceDashboard" Href="/">Home</MudNavLink>
 
-            <MudNavGroup Icon="@Icons.Material.Filled.Edit" Title="Listados" Expanded="true">
+            <MudNavGroup Icon="@Icons.Material.Filled.List" Title="Listados" Expanded="true">
                 <MudNavLink Href="/lista/polizas">Polizas</MudNavLink>
                 <MudNavLink Href="/lista/titulares">Titulares</MudNavLink>  
                 <MudNavLink Href="/lista/vehiculos">Vehiculos</MudNavLink>  
@@ -37,22 +37,7 @@
                 <MudNavLink Href="/alta/terceros">Terceros</MudNavLink>  
 
             </MudNavGroup>
-            <MudNavGroup Icon="@Icons.Material.Filled.Delete" Title="Bajas" Expanded="false">
-                <MudNavLink Href="/baja/polizas">Polizas</MudNavLink>
-                <MudNavLink Href="/baja/titulares">Titulares</MudNavLink>  
-                <MudNavLink Href="/baja/asegurables">Asegurables</MudNavLink>  
-                <MudNavLink Href="/baja/siniestros">Siniestros</MudNavLink>  
-                <MudNavLink Href="/baja/terceros">Terceros</MudNavLink>  
-            </MudNavGroup>
-            
-            <MudNavGroup Icon="@Icons.Material.Filled.Edit" Title="Modificaciones" Expanded="false">
-                <MudNavLink Href="/edit/polizas">Polizas</MudNavLink>
-                <MudNavLink Href="/edit/titulares">Titulares</MudNavLink>  
-                <MudNavLink Href="/edit/asegurables">Asegurables</MudNavLink>  
-                <MudNavLink Href="/edit/siniestros">Siniestros</MudNavLink>  
-                <MudNavLink Href="/edit/terceros">Terceros</MudNavLink>  
-            </MudNavGroup>
-            
+
             <MudNavLink  Href="/about">About</MudNavLink>
         </MudNavMenu>
         
