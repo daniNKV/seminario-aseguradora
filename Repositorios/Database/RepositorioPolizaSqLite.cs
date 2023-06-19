@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Aplicacion.Entidades;
 using Aplicacion.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repositorios.Database;
 
@@ -26,7 +27,8 @@ public class RepositorioPolizaSqLite : IRepositorioPoliza
     public List<Poliza> Listar()
     {
         using var context = new AseguradoraContexto();
-        Debug.Write("Listando polizas...");
-        return context.Polizas.ToList();
+        var polizas = context.Polizas.Include(p => p.VehiculoAsegurado).ToList();
+        return polizas;
     }
 }
+
