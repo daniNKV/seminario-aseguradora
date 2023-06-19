@@ -1,7 +1,8 @@
 @using MudBlazor
 @using Aplicacion.UseCases.Vehiculos
+@using Aplicacion.UseCases.Polizas
 @inject ListarVehiculosUseCase ListarVehiculos
-@inject ModificarVehiculoUseCase ModificarVehiculo
+@inject ObtenerPolizaDeVehiculoUseCase ObtenerPolizaDeVehiculo
 @inject EliminarVehiculoUseCase EliminarVehiculo
 @inject IDialogService DialogService
 @inject NavigationManager Navegador
@@ -64,10 +65,19 @@
                             <td>@context.Item.Titular?.Direccion</td>
                             <td>@context.Item.Titular?.Email</td>
                             <td>
-                                <MudButton 
-                                    OnClick="@(() => { if (@context.Item.Titular != null) {VerTitular(@context.Item.Titular); } })" 
-                                    Size="Size.Small" Variant="Variant.Outlined" 
-                                    Color="Color.Primary">Ver Titular</MudButton>
+                                <MudStack Row Class="-my-4">
+                                <MudButton
+                                    OnClick="@(() => { if (@context.Item.Titular != null) {VerTitular(@context.Item.Titular); } })"
+                                    Size="Size.Small" Variant="Variant.Outlined"
+                                    Color="Color.Primary">Ver Titular</MudButton>                                    
+                                    
+                                    <MudButton 
+                                        OnClick="@(() => { if (@context.Item != null) {VerPoliza(@context.Item); } })" 
+                                        Size="Size.Small" 
+                                        Variant="Variant.Outlined" 
+                                        Color="Color.Primary">Ver Poliza</MudButton>
+                                </MudStack>
+    
                             </td>
                         </tr>
                     </tbody>
@@ -85,7 +95,6 @@
     [Parameter] public int? Id { get; set; }
     private IEnumerable<Vehiculo>? _vehiculos = new List<Vehiculo>();
     private string? _searchString;
-    //DialogoConfirmacion dialogo = null!;
     Vehiculo? _vehiculoAEliminar = null;
     
     protected override void OnParametersSet()
@@ -106,7 +115,7 @@
     
     void Modificar(Vehiculo cli)
     {
-        Navegador.NavigateTo($"form/titulares/{cli.Id}");
+        Navegador.NavigateTo($"form/vehiculos/{cli.Id}");
     }
 
     async Task ConfirmarEliminacion(Vehiculo cli)
@@ -162,6 +171,12 @@
         return false;
     };
 
-    
+
+    private void VerPoliza(Vehiculo item)
+    {
+        var poliza = ObtenerPolizaDeVehiculo.Ejecutar(item);  
+        Navegador.NavigateTo($"lista/polizas/{poliza!.Id}");
+
+    }
 
 }

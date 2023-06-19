@@ -34,45 +34,54 @@
                 </CellTemplate>
             </TemplateColumn>
         </Columns>
+        
         <ChildRowContent>
             <MudContainer Fixed="true">
                 <MudSimpleTable Style="overflow-x: auto;">
                     <thead>
-                        <th>ID</th>
-                        <th>Dominio</th>
-                        <th>Marca</th>
-                        <th>Fabricacion</th>
-                        <th>Titular ID</th>
-                        <th>Accion</th>
+                    <th>ID</th>
+                    <th>Dominio</th>
+                    <th>Marca</th>
+                    <th>Fabricacion</th>
+                    <th>Titular ID</th>
+                    <th>Accion</th>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>@context.Item.VehiculoAsegurado?.Id</td>
-                            <td>@context.Item.VehiculoAsegurado?.Dominio</td>
-                            <td>@context.Item.VehiculoAsegurado?.Marca</td>
-                            <td>@context.Item.VehiculoAsegurado?.Fabricacion</td>
-                            <td>@context.Item.VehiculoAsegurado?.TitularId</td>
-                            <td>                                                
-                                <MudButton OnClick="@(() => { if (@context.Item.VehiculoAsegurado != null) {VerVehiculo(@context.Item.VehiculoAsegurado); } })" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Primary">Ver Vehiculo</MudButton>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td>@context.Item.VehiculoAsegurado?.Id</td>
+                        <td>@context.Item.VehiculoAsegurado?.Dominio</td>
+                        <td>@context.Item.VehiculoAsegurado?.Marca</td>
+                        <td>@context.Item.VehiculoAsegurado?.Fabricacion</td>
+                        <td>@context.Item.VehiculoAsegurado?.TitularId</td>
+                        <td>          
+                            <MudStack Row Class="-my-4">
+                                <MudButton 
+                                    OnClick="@(() => { if (@context.Item.VehiculoAsegurado != null) {VerVehiculo(@context.Item.VehiculoAsegurado); } })" 
+                                    Size="Size.Small" Variant="Variant.Outlined" 
+                                    Color="Color.Primary">Ver Vehiculo</MudButton>
+                                <MudButton 
+                                    OnClick="@(() => { if (@context.Item != null) {VerTitular(@context.Item); } })" 
+                                    Size="Size.Small" Variant="Variant.Outlined" 
+                                    Color="Color.Primary">Ver Titular</MudButton>
+                            </MudStack>
+                        </td>
+                    </tr>
                     </tbody>
                 </MudSimpleTable>
             </MudContainer>
         </ChildRowContent>
+        
         <PagerContent>
             <MudDataGridPager T="Poliza" />
         </PagerContent>
+        
     </MudDataGrid>
 </MudContainer>
 
 @code { 
     [Parameter] public int? Id { get; set; }
-
     private IEnumerable<Poliza>? _polizas = new List<Poliza>();
     private string? _searchString;
-    private const bool SortNameByLength = true;
-    //DialogoConfirmacion dialogo = null!;
     Poliza? _polizaAEliminar;
     
     protected override void OnInitialized()
@@ -93,7 +102,7 @@
     
     void Modificar(Poliza cli)
     {
-        Navegador.NavigateTo($"form/titulares/{cli.Id}");
+        Navegador.NavigateTo($"form/polizas/{cli.Id}");
     }
 
     async Task ConfirmarEliminacion(Poliza cli)
@@ -143,4 +152,10 @@
 
         return false;
     };
+
+    private void VerTitular(Poliza item)
+    {
+        Navegador.NavigateTo($"/lista/titulares/{item.VehiculoAsegurado?.TitularId}");
+    }
+
 }

@@ -45,9 +45,21 @@
                         <PropertyColumn Property="v => v.Marca"/>
                         <PropertyColumn Property="v => v.Fabricacion"/>
                         <PropertyColumn Property="v => v.Dominio"/>
-                        <TemplateColumn CellClass="d-flex justify-start" Title="Poliza">
+                        <TemplateColumn CellClass="d-flex justify-start" Title="Acciones">
                             <CellTemplate Context="vehiculos">
-                                <MudButton OnClick="@(() => VerPoliza(vehiculos.Item))" Variant="Variant.Outlined" Color="Color.Primary">Ver Poliza</MudButton>
+                                <MudStack Row Class="-my-4">
+                                    <MudButton 
+                                        Size="Size.Small"
+                                        OnClick="@(() => VerPoliza(vehiculos.Item))"
+                                        Variant="Variant.Outlined" 
+                                        Color="Color.Primary">Ver Poliza</MudButton>
+                                    <MudButton 
+                                        Size="Size.Small"
+                                        OnClick="@(() => VerVehiculo(vehiculos.Item))" 
+                                        Variant="Variant.Outlined"
+                                        Color="Color.Primary">Ver Vehiculo</MudButton>
+                                </MudStack>
+                                
                             </CellTemplate>
                         </TemplateColumn>
                     </Columns>
@@ -81,6 +93,7 @@
     private void VerPoliza(Vehiculo vehiculo)
     {
         var poliza = ObtenerPolizaDeVehiculo.Ejecutar(vehiculo);
+        Console.WriteLine(poliza);
         if (poliza != null) Navegador.NavigateTo($"lista/polizas/{poliza.Id}");
     }
     
@@ -148,5 +161,10 @@
         return false;
     };
 
+
+    private void VerVehiculo(Vehiculo item)
+    {
+        Navegador.NavigateTo($"lista/vehiculos/{item.Id}");
+    }
 
 }

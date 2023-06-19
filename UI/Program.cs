@@ -5,10 +5,12 @@ using Aplicacion.UseCases.Titulares;
 using Aplicacion.UseCases.Terceros;
 using Aplicacion.UseCases.Siniestros;
 using Aplicacion.UseCases.Vehiculos;
+using Microsoft.EntityFrameworkCore;
 using UI.Data;
 using MudBlazor.Services;
 using Repositorios;
 using Repositorios.Database;
+
 using Repositorios.Txt;
 
 
@@ -73,8 +75,16 @@ builder.Services.AddScoped<IRepositorioTercero, RepositorioTerceroSqLite>();
 
 using var context = new AseguradoraContexto();
 context.Database.EnsureCreated();
+var connection = context.Database.GetDbConnection();
+connection.Open();
+using (var command = connection.CreateCommand())
+{
+    command.CommandText = "PRAGMA journal_mode=DELETE;";
+    command.ExecuteNonQuery();
+}
 AseguradoraInit.Inicializar(context);
 context.Dispose();
+
 
 var app = builder.Build();
 

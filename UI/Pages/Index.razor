@@ -1,10 +1,12 @@
-﻿@using MudBlazor
+﻿@inject NavigationManager Navegador
 @page "/"
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Aseguradora</PageTitle>
 
-<MudContainer>
-    <h1>Hello, world!</h1>
-    
-    Welcome to your new app.
-</MudContainer>
+@code
+{
+    protected override void OnInitialized()
+    {
+        Navegador.NavigateTo("/lista/titulares");
+    }
+}
