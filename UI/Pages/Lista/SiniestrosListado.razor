@@ -82,7 +82,6 @@
     async Task ConfirmarEliminacion(Siniestro cli)
     {
         _siniestroAEliminar = cli;
-        Console.WriteLine(_siniestroAEliminar);
         var parametros = new DialogParameters
         {
             { "ContentText", $"Realmente quieres eliminar el siniestro {cli.Id}?" },

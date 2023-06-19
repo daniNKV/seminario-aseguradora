@@ -6,6 +6,7 @@
 @inject AgregarPolizaUseCase AgregarPoliza
 @inject ModificarPolizaUseCase ModificarPoliza
 @inject ObtenerPolizaUseCase ObtenerPoliza
+@inject NavigationManager Navegador
 
 <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-2">
     @if (_esNuevaPoliza)
@@ -89,6 +90,7 @@
         {
             AgregarPoliza.Ejecutar(_poliza);
             Snackbar?.Add("Agregado!");
+            Navegador.NavigateTo($"/lista/polizas/{_poliza.Id}");
         }
         else
         {

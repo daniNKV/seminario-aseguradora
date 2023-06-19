@@ -99,7 +99,6 @@
     async Task ConfirmarEliminacion(Poliza cli)
     {
         _polizaAEliminar = cli;
-        Console.WriteLine(_polizaAEliminar.Id);
         var parametros = new DialogParameters
         {
             { "ContentText", $"Realmente quieres eliminar la poliza {cli.Id}?" },

@@ -106,7 +106,6 @@
     async Task ConfirmarEliminacion(Tercero cli)
     {
         _terceroAEliminar = cli;
-        Console.WriteLine(_terceroAEliminar.Id);
         var parametros = new DialogParameters
         {
             { "ContentText", $"Realmente quieres eliminar al tercero {cli.Id} involucardo en el siniestro {cli.SiniestroId}?" },

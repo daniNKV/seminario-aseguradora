@@ -29,9 +29,7 @@ public class RepositorioVehiculoSqLite : IRepositorioVehiculo
         
         var vehiculoAEliminar = context.Vehiculos.FirstOrDefault(t => t.Id == id);
         if (vehiculoAEliminar != null)
-        {   
-            Console.WriteLine("Eliminando vehiculo...");
-            Console.WriteLine($"{vehiculoAEliminar}");
+        {
             context.Vehiculos.Remove(vehiculoAEliminar);
             context.SaveChanges();
         }

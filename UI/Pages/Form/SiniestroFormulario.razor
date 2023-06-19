@@ -84,7 +84,7 @@
     {
         _form.Validate();
 
-        if (!_form.IsValid) return;
+        if (!_form.IsValid && !ValidarFecha(_siniestro)) return;
         
         if (_esNuevoSiniestro)
         {
@@ -97,8 +97,11 @@
             ModificarSiniestro.Ejecutar(_siniestro);
             Snackbar?.Add("Modificado!");
         }
+        
+        Navegador.NavigateTo($"/lista/siniestros/{_siniestro.Id}");
+
     }
-    private bool ValidarPoliza(Siniestro siniestro)
+    private bool ValidarFecha(Siniestro siniestro)
     {
         var poliza = ObtenerPolizaDeSiniestro.Ejecutar(siniestro);
         
@@ -130,10 +133,7 @@
                 .Length(1, 500);
 
         }
-        private bool ValidarFecha(DateTime fecha)
-        {
-            return fecha >= DateTime.Today;
-        }
+
         
         
         public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>

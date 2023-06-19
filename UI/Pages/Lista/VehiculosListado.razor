@@ -108,7 +108,6 @@
     async Task ConfirmarEliminacion(Vehiculo cli)
     {
         _vehiculoAEliminar = cli;
-        Console.WriteLine(_vehiculoAEliminar.Id);
         var parametros = new DialogParameters
         {
             { "ContentText", $"Realmente quieres eliminar el vehiculo {cli.Id}?" },

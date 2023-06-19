@@ -5,6 +5,7 @@
 @inject AgregarTitularUseCase AgregarTitular
 @inject ModificarTitularUseCase ModificarTitular
 @inject ObtenerTitularUseCase ObtenerTitular
+@inject NavigationManager Navegador
 
 <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-2">
     @if (_esNuevoTitular)
@@ -67,7 +68,7 @@
 @code {
     [Parameter] public int? Id { get; set; }
     [Inject] ISnackbar Snackbar { get; set; }
-    Titular? _titular = new ();
+    Titular _titular = new ();
     MudForm _form;
     readonly TitularesFluentValidator _titularesValidator = new ();
     bool _esNuevoTitular=true;
@@ -96,6 +97,9 @@
             ModificarTitular.Ejecutar(_titular);
             Snackbar?.Add("Modificado!");
         }
+        
+        Navegador.NavigateTo($"/lista/titulares/{_titular.Id}");
+
     }
     
     public class TitularesFluentValidator : AbstractValidator<Titular>

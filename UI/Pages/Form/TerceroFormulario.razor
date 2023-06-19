@@ -5,6 +5,7 @@
 @inject AgregarTerceroUseCase AgregarTercero
 @inject ModificarTerceroUseCase ModificarTercero
 @inject ObtenerTerceroUseCase ObtenerTercero
+@inject NavigationManager Navegador
 
 <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-2">
     @if (_esNuevoTercero)
@@ -77,7 +78,7 @@
 @code {
     [Parameter] public int? Id { get; set; }
     [Inject] ISnackbar Snackbar { get; set; }
-    Tercero? _tercero = new ();
+    Tercero _tercero = new ();
     MudForm _form;
     readonly TercerosFluentValidator _tercerosValidator = new ();
     bool _esNuevoTercero=true;
@@ -106,6 +107,8 @@
             ModificarTercero.Ejecutar(_tercero);
             Snackbar?.Add("Modificado!");
         }
+        Navegador.NavigateTo($"/lista/terceros/{_tercero.Id}");
+
     }
     
     public class TercerosFluentValidator : AbstractValidator<Tercero>

@@ -5,6 +5,7 @@
 @inject AgregarVehiculoUseCase AgregarVehiculo
 @inject ModificarVehiculoUseCase ModificarVehiculo
 @inject ObtenerVehiculoUseCase ObtenerVehiculo
+@inject NavigationManager Navegador
 
 <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-2">
     @if (_esNuevoVehiculo)
@@ -61,9 +62,9 @@
 
 @code {
     [Parameter] public int? Id { get; set; }
-    [Inject] ISnackbar Snackbar { get; set; }
-    Vehiculo? _vehiculo = new ();
-    MudForm _form;
+    [Inject] ISnackbar? Snackbar { get; set; }
+    Vehiculo _vehiculo = new ();
+    MudForm? _form;
     readonly VehiculosFluentValidator _vehiculosValidator = new ();
     bool _esNuevoVehiculo=true;
     
@@ -72,7 +73,7 @@
         if (Id == null) return;
         
         var vehiculoEncontrado = ObtenerVehiculo.Ejecutar(Id.Value);
-        _vehiculo = vehiculoEncontrado;
+        if (vehiculoEncontrado != null) _vehiculo = vehiculoEncontrado;
         _esNuevoVehiculo=false;
     }
     private void Submit()
@@ -91,6 +92,8 @@
             ModificarVehiculo.Ejecutar(_vehiculo);
             Snackbar?.Add("Modificado!");
         }
+        Navegador.NavigateTo($"/lista/vehiculos/{_vehiculo.Id}");
+
     }
     
     public class VehiculosFluentValidator : AbstractValidator<Vehiculo>
