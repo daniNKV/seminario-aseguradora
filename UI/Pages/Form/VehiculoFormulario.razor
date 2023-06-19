@@ -46,7 +46,7 @@
 
             </MudCardContent>
             <MudCardActions>
-                <MudButton Variant="Variant.Filled" Color="Color.Secondary" DisableElevation="true" OnClick="@(() => _form.Validate())">Validar</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary" DisableElevation="true" OnClick="@(ValidarFormulario)">Validar</MudButton>
 
                 <MudButton
                     OnClick="@(Submit)"
@@ -78,9 +78,9 @@
     }
     private void Submit()
     {
-        _form.Validate();
+        _form?.Validate();
 
-        if (!_form.IsValid) return;
+        if (_form is {IsValid: false }) return;
         
         if (_esNuevoVehiculo)
         {
@@ -92,6 +92,7 @@
             ModificarVehiculo.Ejecutar(_vehiculo);
             Snackbar?.Add("Modificado!");
         }
+        
         Navegador.NavigateTo($"/lista/vehiculos/{_vehiculo.Id}");
 
     }
@@ -124,5 +125,10 @@
                 return Array.Empty<string>();
             return result.Errors.Select(e => e.ErrorMessage);
         };
+    }
+    
+    private Task ValidarFormulario()
+    {
+        return _form?.Validate() ?? throw new InvalidOperationException();
     }
 }

@@ -50,7 +50,11 @@
 
             </MudCardContent>
             <MudCardActions>
-                <MudButton Variant="Variant.Filled" Color="Color.Secondary" DisableElevation="true" OnClick="@(() => _form.Validate())">Validar</MudButton>
+                <MudButton 
+                    Variant="Variant.Filled" 
+                    Color="Color.Secondary" 
+                    DisableElevation="true" 
+                    OnClick="@(ValidarFormulario)">Validar</MudButton>
 
                 <MudButton
                     OnClick="@(Submit)"
@@ -66,9 +70,9 @@
 
 @code {
     [Parameter] public int? Id { get; set; }
-    [Inject] ISnackbar Snackbar { get; set; }
-    Poliza? _poliza = new ();
-    MudForm _form;
+    [Inject] ISnackbar? Snackbar { get; set; }
+    Poliza _poliza = new ();
+    MudForm? _form;
     readonly PolizasFluentValidator _polizasValidator = new ();
     bool _esNuevaPoliza=true;
     
@@ -77,14 +81,14 @@
         if (Id == null) return;
         
         var polizaEncontrada = ObtenerPoliza.Ejecutar(Id.Value);
-        _poliza = polizaEncontrada;
+        if (polizaEncontrada != null) _poliza = polizaEncontrada;
         _esNuevaPoliza=false;
     }
     private void Submit()
     {
-        _form.Validate();
+        _form?.Validate();
 
-        if (!_form.IsValid) return;
+        if (_form is {IsValid: false }) return;
         
         if (_esNuevaPoliza)
         {
@@ -135,5 +139,9 @@
                 return Array.Empty<string>();
             return result.Errors.Select(e => e.ErrorMessage);
         };
+    }
+    private Task ValidarFormulario()
+    {
+        return _form?.Validate() ?? throw new InvalidOperationException();
     }
 }

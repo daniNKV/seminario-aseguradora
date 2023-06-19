@@ -61,7 +61,7 @@
                     Variant="Variant.Filled"
                     Color="Color.Secondary"
                     DisableElevation="true"
-                    OnClick="@(() => _form.Validate())">Validar</MudButton>
+                    OnClick="@(ValidarFormulario)">Validar</MudButton>
                 <MudButton
                     OnClick="@(Submit)"
                     Variant="Variant.Filled"
@@ -77,9 +77,9 @@
 
 @code {
     [Parameter] public int? Id { get; set; }
-    [Inject] ISnackbar Snackbar { get; set; }
+    [Inject] ISnackbar? Snackbar { get; set; }
     Tercero _tercero = new ();
-    MudForm _form;
+    MudForm? _form;
     readonly TercerosFluentValidator _tercerosValidator = new ();
     bool _esNuevoTercero=true;
     
@@ -88,14 +88,14 @@
         if (Id == null) return;
         
         var terceroEncontrado = ObtenerTercero.Ejecutar(Id.Value);
-        _tercero = terceroEncontrado;
+        if (terceroEncontrado != null) _tercero = terceroEncontrado;
         _esNuevoTercero=false;
     }
     private void Submit()
     {
-        _form.Validate();
+        _form?.Validate();
 
-        if (!_form.IsValid) return;
+        if (_form is { IsValid: false }) return;
         
         if (_esNuevoTercero)
         {
@@ -143,5 +143,10 @@
                 return Array.Empty<string>();
             return result.Errors.Select(e => e.ErrorMessage);
         };
+    }
+    
+    private Task ValidarFormulario()
+    {
+        return _form?.Validate() ?? throw new InvalidOperationException();
     }
 }

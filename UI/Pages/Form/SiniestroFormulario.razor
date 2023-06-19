@@ -50,7 +50,11 @@
                 
             </MudCardContent>
             <MudCardActions>
-                <MudButton Variant="Variant.Filled" Color="Color.Secondary" DisableElevation="true" OnClick="@(() => _form.Validate())">Validar</MudButton>
+                <MudButton 
+                    Variant="Variant.Filled" 
+                    Color="Color.Secondary" 
+                    DisableElevation="true" 
+                    OnClick="@(ValidarFormulario)">Validar</MudButton>
 
                 <MudButton
                     OnClick="@(Submit)"
@@ -66,9 +70,9 @@
 
 @code {
     [Parameter] public int? Id { get; set; }
-    [Inject] ISnackbar Snackbar { get; set; }
-    Siniestro? _siniestro = new ();
-    MudForm _form;
+    [Inject] ISnackbar? Snackbar { get; set; }
+    Siniestro _siniestro = new ();
+    MudForm? _form;
     readonly SiniestrosFluentValidator _siniestrosValidator = new ();
     bool _esNuevoSiniestro=true;
     
@@ -77,14 +81,14 @@
         if (Id == null) return;
         
         var siniestroEncontrado = ObtenerSiniestro.Ejecutar(Id.Value);
-        _siniestro = siniestroEncontrado;
+        if (siniestroEncontrado != null) _siniestro = siniestroEncontrado;
         _esNuevoSiniestro=false;
     }
     private void Submit()
     {
-        _form.Validate();
+        _form?.Validate();
 
-        if (!_form.IsValid && !ValidarFecha(_siniestro)) return;
+        if (_form is {IsValid: false } && !ValidarFecha(_siniestro)) return;
         
         if (_esNuevoSiniestro)
         {
@@ -103,7 +107,7 @@
     }
     private bool ValidarFecha(Siniestro siniestro)
     {
-        var poliza = ObtenerPolizaDeSiniestro.Ejecutar(siniestro);
+        var poliza = ObtenerPolizaDeSiniestro.Ejecutar(siniestro) ?? throw new ArgumentNullException("ObtenerPolizaDeSiniestro.Ejecutar(siniestro)");
         
         if (poliza.FinVigencia < siniestro.FechaSuceso)
         {
@@ -143,5 +147,10 @@
                 return Array.Empty<string>();
             return result.Errors.Select(e => e.ErrorMessage);
         };
+    }
+    
+    private Task ValidarFormulario()
+    {
+        return _form?.Validate() ?? throw new InvalidOperationException();
     }
 }

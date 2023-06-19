@@ -65,7 +65,7 @@
                             <td>@context.Item.Titular?.Email</td>
                             <td>
                                 <MudButton 
-                                    OnClick="@(() => VerTitular(@context.Item.Titular))" 
+                                    OnClick="@(() => { if (@context.Item.Titular != null) {VerTitular(@context.Item.Titular); } })" 
                                     Size="Size.Small" Variant="Variant.Outlined" 
                                     Color="Color.Primary">Ver Titular</MudButton>
                             </td>
@@ -85,11 +85,15 @@
     [Parameter] public int? Id { get; set; }
     private IEnumerable<Vehiculo>? _vehiculos = new List<Vehiculo>();
     private string? _searchString;
-    private bool _sortNameByLength;
     //DialogoConfirmacion dialogo = null!;
     Vehiculo? _vehiculoAEliminar = null;
     
-    
+    protected override void OnParametersSet()
+    {
+        if (Id == null) return;
+        _searchString = Id.ToString();
+    }
+
     protected override void OnInitialized()
     {
         _vehiculos = ListarVehiculos.Ejecutar();

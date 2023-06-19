@@ -65,7 +65,6 @@
     [Parameter] public int? Id { get; set; }
     private IEnumerable<Siniestro>? _siniestros = new List<Siniestro>();
     private string? _searchString;
-    private bool _sortNameByLength;
     Siniestro? _siniestroAEliminar = null;
     
     protected override void OnParametersSet()
@@ -138,5 +137,7 @@
 
         return false;
     };
+    
+    
     
 }
