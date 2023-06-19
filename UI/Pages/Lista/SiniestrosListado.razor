@@ -1,0 +1,156 @@
+@using MudBlazor
+@using Aplicacion.UseCases.Siniestros
+@using Aplicacion.UseCases.Terceros
+@inject ListarSiniestrosUseCase ListarSiniestros
+@inject EliminarSiniestroUseCase EliminarSiniestro
+@inject ObtenerTerceroUseCase ObtenerTercero
+@inject NavigationManager Navegador
+@inject IDialogService DialogService
+
+@page "/lista/siniestros/{Id:int?}"
+
+<MudContainer Fixed="true">
+    <MudDataGrid Items="@_siniestros" xs="12" sm="7" QuickFilter="@QuickFilter">
+        <ToolBarContent>
+            <MudText Typo="Typo.h4">Siniestros</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+            
+        <Columns>
+            <PropertyColumn Property="v => v.Id" Title="ID"/>
+            <PropertyColumn Property="v => v.FechaIngreso" Title="Fecha Ingreso"/>
+            <PropertyColumn Property="v => v.FechaSuceso" Title="Fecha Suceso"/>
+            <PropertyColumn Property="v => v.Direccion"/>
+            @*
+            <PropertyColumn Property="v => v.Descripcion"/>
+            *@
+            <PropertyColumn Property="v => v.PolizaId" Title="Poliza ID"/>
+            <HierarchyColumn T="Siniestro" ButtonDisabledFunc="@(x => !x.Terceros?.Any() ?? false)"/>
+
+            <TemplateColumn CellClass="d-flex justify-start" Title="Acciones">
+                <CellTemplate>
+                    <MudStack Row Class="-my-4">
+                        <MudButton 
+                        OnClick="@(() => VerPoliza(@context.Item.PolizaId))" 
+                        Size="Size.Small" Variant="Variant.Outlined" 
+                            Color="Color.Primary">Ver Poliza</MudButton>
+                        <MudButton 
+                            OnClick="@(() => Modificar(@context.Item))" 
+                            Size="Size.Small" Variant="Variant.Filled" 
+                            Color="Color.Primary">Editar</MudButton>
+                        <MudButton 
+                            OnClick="@(() => ConfirmarEliminacion(@context.Item))" 
+                            Size="Size.Small" Variant="Variant.Filled" 
+                            Color="Color.Error">Eliminar</MudButton>
+                    </MudStack>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+        <ChildRowContent>
+            <MudContainer Fixed="true">
+                <MudDataGrid Items="@context.Item.Terceros" xs="12" sm="7">
+                    <Columns>
+                        <PropertyColumn Property="v => v.Id" Title="ID"/>
+                        <PropertyColumn Property="v => v.Nombre"/>
+                        <PropertyColumn Property="v => v.Apellido"/>
+                        <PropertyColumn Property="v => v.Dni" Title="DNI"/>
+                        <PropertyColumn Property="v => v.Dni"/>
+                        <TemplateColumn CellClass="d-flex justify-start" Title="Acciones">
+                            <CellTemplate Context="terceros">
+                                <MudButton OnClick="@(() => VerTercero(@terceros.Item))" Variant="Variant.Outlined" Color="Color.Primary">Ver Tercero</MudButton>
+                            </CellTemplate>
+                        </TemplateColumn>
+                    </Columns>
+                </MudDataGrid>
+            </MudContainer>
+        </ChildRowContent>
+        <PagerContent>
+            <MudDataGridPager T="Siniestro" />
+        </PagerContent>
+    </MudDataGrid>
+</MudContainer>
+
+@code { 
+    [Parameter] public int? Id { get; set; }
+    private IEnumerable<Siniestro>? _siniestros = new List<Siniestro>();
+    private string? _searchString;
+    Siniestro? _siniestroAEliminar = null;
+    
+    protected override void OnParametersSet()
+    {
+        if (Id == null) return;
+        _searchString = Id.ToString();
+    }
+    
+    protected override void OnInitialized()
+    {
+        _siniestros = ListarSiniestros.Ejecutar();
+    }
+    
+    async Task ConfirmarEliminacion(Siniestro cli)
+    {
+        _siniestroAEliminar = cli;
+        var parametros = new DialogParameters
+        {
+            { "ContentText", $"Realmente quieres eliminar el siniestro {cli.Id}?" },
+            { "ButtonText", "Eliminar" },
+            { "Color", Color.Error },
+        };
+        
+        var options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            CloseButton = true, 
+            MaxWidth = MaxWidth.ExtraSmall,
+        };
+
+        var dialog = await DialogService.ShowAsync<Dialog>("Eliminar", parametros, options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            Eliminar();
+        }
+    }
+    
+    private void Eliminar()
+    {
+        if (_siniestroAEliminar != null)
+        {
+            EliminarSiniestro.Ejecutar(_siniestroAEliminar.Id);
+            _siniestros = ListarSiniestros.Ejecutar(); 
+            StateHasChanged();
+
+        }
+    }
+    
+    private void VerTercero(Tercero tercero)
+    {
+        var _tercero = ObtenerTercero.Ejecutar(tercero.Id);
+        if (_tercero != null) Navegador.NavigateTo($"lista/terceros/{tercero.Id}");
+    }
+    
+    void Modificar(Siniestro cli)
+    {
+        Navegador.NavigateTo($"form/siniestros/{cli.Id}");
+    }
+    
+
+    private Func<Siniestro, bool> QuickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if ($"{x.Id}".Contains(_searchString))
+            return true;
+
+        return false;
+    };
+    
+    private void VerPoliza(int id)
+    {
+        Navegador.NavigateTo($"/lista/polizas/{id}");
+    }
+    
+}

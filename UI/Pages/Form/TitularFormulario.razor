@@ -1,0 +1,146 @@
+@page "/form/titulares/{Id:int?}"
+@using MudBlazor
+@using Aplicacion.UseCases.Titulares
+
+@inject AgregarTitularUseCase AgregarTitular
+@inject ModificarTitularUseCase ModificarTitular
+@inject ObtenerTitularUseCase ObtenerTitular
+@inject NavigationManager Navegador
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-2">
+    @if (_esNuevoTitular)
+    {
+        <h3>Agregando nuevo Titular!</h3>
+    }
+    else
+    {
+        <h3>Modificando Titular ID: "@_titular.Id"</h3>
+    }
+    <MudCard Class="mt-6">
+        <MudForm Model="@_titular" @ref="@_form" Validation="@(_titularesValidator.ValidateValue)" ValidationDelay="0">
+            <MudCardContent>
+                <MudTextField
+                    @bind-Value="_titular.Nombre"
+                    For="@(() => _titular.Nombre)"
+                    Immediate="true"
+                    Label="Nombre"/>
+
+                <MudTextField
+                    @bind-Value="_titular.Apellido"
+                    For="@(() => _titular.Apellido)"
+                    Immediate="true"
+                    Label="Apellido"/>
+
+                <MudNumericField
+                    Label="DNI"
+                    Variant="Variant.Text" Min="0"
+                    @bind-Value="_titular.Dni"
+                    For="@(() => _titular.Dni)"/>
+
+                <MudTextField
+                    @bind-Value="_titular.Direccion"
+                    For="@(() => _titular.Direccion)"
+                    Immediate="true"
+                    Label="Direccion"/>
+
+                <MudTextField
+                    @bind-Value="_titular.Email"
+                    For="@(() => _titular.Email)"
+                    Immediate="true"
+                    Label="Email"/>
+
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton 
+                    Variant="Variant.Filled" 
+                    Color="Color.Secondary" 
+                    DisableElevation="true" 
+                    OnClick="@(ValidarFormulario)">Validar</MudButton>
+
+                <MudButton
+                    OnClick="@(Submit)"
+                    Variant="Variant.Filled"
+                    Color="Color.Primary"
+                    Class="ml-4">Agregar!</MudButton>
+
+            </MudCardActions>
+        </MudForm>
+    </MudCard>
+
+</MudContainer>
+
+@code {
+    [Parameter] public int? Id { get; set; }
+    [Inject] ISnackbar? Snackbar { get; set; }
+    Titular _titular = new ();
+    MudForm? _form;
+    readonly TitularesFluentValidator _titularesValidator = new ();
+    bool _esNuevoTitular=true;
+    
+    protected override void OnParametersSet()
+    {
+        if (Id == null) return;
+        
+        var titularEncontrado = ObtenerTitular.Ejecutar(Id.Value);
+        if (titularEncontrado != null) _titular = titularEncontrado;
+        _esNuevoTitular=false;
+    }
+    private void Submit()
+    {
+        _form?.Validate();
+
+        if (_form is {IsValid: false }) return;
+        
+        if (_esNuevoTitular)
+        {
+            AgregarTitular.Ejecutar(_titular);
+            Snackbar?.Add("Agregado!");
+        }
+        else
+        {
+            ModificarTitular.Ejecutar(_titular);
+            Snackbar?.Add("Modificado!");
+        }
+        Navegador.NavigateTo($"/lista/titulares/{_titular.Id}");
+    }
+    
+    public class TitularesFluentValidator : AbstractValidator<Titular>
+    {
+        public TitularesFluentValidator()
+        {
+            RuleFor(x => x.Nombre)
+                .NotEmpty()
+                .Length(1, 30);
+
+            RuleFor(x => x.Apellido)
+                .NotEmpty()
+                .Length(1, 30);
+
+            RuleFor(x => x.Dni)
+                .NotEmpty()
+                .GreaterThanOrEqualTo(1);
+
+            RuleFor(x => x.Direccion)
+                .NotEmpty()
+                .Length(1, 50);
+
+            RuleFor(x => x.Email)
+                .NotEmpty()
+                .EmailAddress();
+        }
+
+        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+        {
+            var result = await ValidateAsync(ValidationContext<Titular>.CreateWithOptions((Titular)model, x => x.IncludeProperties(propertyName)));
+            if (result.IsValid)
+                return Array.Empty<string>();
+            return result.Errors.Select(e => e.ErrorMessage);
+        };
+    }
+
+    private Task ValidarFormulario()
+    {
+        return _form?.Validate() ?? throw new InvalidOperationException();
+    }
+
+}

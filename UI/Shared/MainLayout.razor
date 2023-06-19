@@ -1,0 +1,59 @@
+﻿@using MudBlazor
+@inherits LayoutComponentBase
+
+<PageTitle>Aseguradora</PageTitle>
+<MudThemeProvider/>
+<MudDialogProvider/>
+
+<MudLayout>
+    <MudAppBar Elevation="1" Color="Color.Dark">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <MudSpacer />
+        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
+        
+    </MudAppBar>
+    <MudDrawer @bind-Open="_drawerOpen" Elevation="2">
+        <MudDrawerHeader>
+            <MudText Typo="Typo.h5" Class="mt-1">Aseguradora</MudText>
+        </MudDrawerHeader>
+        @*NavMenu*@
+        <MudNavMenu>
+            <MudDivider Class="my-2"/>
+            <MudNavLink Icon="@Icons.Material.Filled.SpaceDashboard" Href="/">Home</MudNavLink>
+
+            <MudNavGroup Icon="@Icons.Material.Filled.List" Title="Listados" Expanded="true">
+                <MudNavLink Href="/lista/titulares">Titulares</MudNavLink>
+                <MudNavLink Href="/lista/polizas">Polizas</MudNavLink>
+                <MudNavLink Href="/lista/vehiculos">Vehiculos</MudNavLink>
+                <MudNavLink Href="/lista/siniestros">Siniestros</MudNavLink>
+                <MudNavLink Href="/lista/terceros">Terceros</MudNavLink>
+            </MudNavGroup>
+            
+            <MudNavGroup Icon="@Icons.Material.Filled.Add" Title="Altas" Expanded="false">
+                <MudNavLink Href="/form/titulares">Titulares</MudNavLink>
+                <MudNavLink Href="/form/polizas">Polizas</MudNavLink>
+                <MudNavLink Href="/form/vehiculos">Vehiculos</MudNavLink>
+                <MudNavLink Href="/form/siniestros">Siniestros</MudNavLink>
+                <MudNavLink Href="/form/terceros">Terceros</MudNavLink>
+            </MudNavGroup>
+
+        </MudNavMenu>
+        
+        <MudPaper Width="250px" Class="py-3" Elevation="0">
+
+        </MudPaper>
+    </MudDrawer>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    bool _drawerOpen = true;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+}
+

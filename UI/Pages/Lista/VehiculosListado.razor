@@ -1,0 +1,182 @@
+@using MudBlazor
+@using Aplicacion.UseCases.Vehiculos
+@using Aplicacion.UseCases.Polizas
+@inject ListarVehiculosUseCase ListarVehiculos
+@inject ObtenerPolizaDeVehiculoUseCase ObtenerPolizaDeVehiculo
+@inject EliminarVehiculoUseCase EliminarVehiculo
+@inject IDialogService DialogService
+@inject NavigationManager Navegador
+
+@page "/lista/vehiculos/{Id:int?}"
+
+<MudContainer Fixed="true">
+    <MudDataGrid Items="@_vehiculos" xs="12" sm="7" QuickFilter="@QuickFilter">
+        <ToolBarContent>
+            <MudText Typo="Typo.h4">Vehiculos</MudText>
+            <MudSpacer />
+            <MudTextField 
+                @bind-Value="_searchString" 
+                Placeholder="Search" 
+                Adornment="Adornment.Start" 
+                Immediate="true" AdornmentIcon="@Icons.Material.Filled.Search" 
+                IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+            
+        <Columns>
+            <PropertyColumn Property="p => p.Id" Title="ID"/>
+            <PropertyColumn Property="p => p.Dominio"/>
+            <PropertyColumn Property="x => x.Marca"/>
+            <PropertyColumn Property="x => x.Fabricacion"/>
+            <HierarchyColumn T="Vehiculo" ButtonDisabledFunc="@(v => v.Titular == null)"/>
+
+            <TemplateColumn CellClass="d-flex justify-start" Title="Acciones">
+                <CellTemplate>
+                    <MudStack Row Class="-my-4">
+                        <MudButton 
+                            OnClick="@( () => Modificar(@context.Item))" 
+                            Size="Size.Small" Variant="Variant.Filled" 
+                            Color="Color.Primary">Editar</MudButton>
+                        <MudButton 
+                            OnClick="@( () => ConfirmarEliminacion(@context.Item))" 
+                            Size="Size.Small" Variant="Variant.Filled" 
+                            Color="Color.Error">Eliminar</MudButton>
+                    </MudStack>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+        <ChildRowContent>
+            <MudContainer Fixed="true">
+                <MudSimpleTable Style="overflow-x: auto;">
+                    <thead>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>DNI</th>
+                        <th>Dirección</th>
+                        <th>Email</th>
+                        <th>Acción</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@context.Item.Titular?.Id</td>
+                            <td>@context.Item.Titular?.Nombre</td>
+                            <td>@context.Item.Titular?.Apellido</td>
+                            <td>@context.Item.Titular?.Dni</td>
+                            <td>@context.Item.Titular?.Direccion</td>
+                            <td>@context.Item.Titular?.Email</td>
+                            <td>
+                                <MudStack Row Class="-my-4">
+                                <MudButton
+                                    OnClick="@(() => { if (@context.Item.Titular != null) {VerTitular(@context.Item.Titular); } })"
+                                    Size="Size.Small" Variant="Variant.Outlined"
+                                    Color="Color.Primary">Ver Titular</MudButton>                                    
+                                    
+                                    <MudButton 
+                                        OnClick="@(() => { if (@context.Item != null) {VerPoliza(@context.Item); } })" 
+                                        Size="Size.Small" 
+                                        Variant="Variant.Outlined" 
+                                        Color="Color.Primary">Ver Poliza</MudButton>
+                                </MudStack>
+    
+                            </td>
+                        </tr>
+                    </tbody>
+                </MudSimpleTable>
+            </MudContainer>
+        </ChildRowContent>
+
+        <PagerContent>
+            <MudDataGridPager T="Vehiculo" />
+        </PagerContent>
+    </MudDataGrid>
+</MudContainer>
+
+@code { 
+    [Parameter] public int? Id { get; set; }
+    private IEnumerable<Vehiculo>? _vehiculos = new List<Vehiculo>();
+    private string? _searchString;
+    Vehiculo? _vehiculoAEliminar = null;
+    
+    protected override void OnParametersSet()
+    {
+        if (Id == null) return;
+        _searchString = Id.ToString();
+    }
+
+    protected override void OnInitialized()
+    {
+        _vehiculos = ListarVehiculos.Ejecutar();
+    }
+    
+    private void VerTitular(Titular titular)
+    {
+        Navegador.NavigateTo($"lista/titulares/{titular.Id}");
+    }
+    
+    void Modificar(Vehiculo cli)
+    {
+        Navegador.NavigateTo($"form/vehiculos/{cli.Id}");
+    }
+
+    async Task ConfirmarEliminacion(Vehiculo cli)
+    {
+        _vehiculoAEliminar = cli;
+        var parametros = new DialogParameters
+        {
+            { "ContentText", $"Realmente quieres eliminar el vehiculo {cli.Id}?" },
+            { "ButtonText", "Eliminar" },
+            { "Color", Color.Error },
+        };
+        
+        var options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            CloseButton = true, 
+            MaxWidth = MaxWidth.ExtraSmall,
+        };
+
+        var dialog = await DialogService.ShowAsync<Dialog>("Eliminar", parametros, options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            Eliminar();
+        }
+    }
+    
+    private void Eliminar()
+    {
+        if (_vehiculoAEliminar != null)
+        {
+            EliminarVehiculo.Ejecutar(_vehiculoAEliminar.Id);
+            _vehiculos = ListarVehiculos.Ejecutar(); 
+            StateHasChanged();
+        }
+    }
+
+    private Func<Vehiculo, bool> QuickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (x.Dominio.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.Marca.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ($"{x.Fabricacion} {x.Id}".Contains(_searchString))
+            return true;
+
+        return false;
+    };
+
+
+    private void VerPoliza(Vehiculo item)
+    {
+        var poliza = ObtenerPolizaDeVehiculo.Ejecutar(item);  
+        Navegador.NavigateTo($"lista/polizas/{poliza!.Id}");
+
+    }
+
+}

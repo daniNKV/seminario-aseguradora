@@ -1,0 +1,148 @@
+@page "/form/siniestros/{Id:int?}"
+@using MudBlazor
+@using Aplicacion.UseCases.Siniestros
+@using Aplicacion.UseCases.Polizas
+
+@inject ObtenerPolizaDeSiniestroUseCase ObtenerPolizaDeSiniestro
+@inject AgregarSiniestroUseCase AgregarSiniestro
+@inject ModificarSiniestroUseCase ModificarSiniestro
+@inject ObtenerSiniestroUseCase ObtenerSiniestro
+@inject NavigationManager Navegador
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-2">
+    @if (_esNuevoSiniestro)
+    {
+        <h3>Agregando nuevo Siniestro!</h3>
+    }
+    else
+    {
+        <h3>Modificando Siniestro ID: "@_siniestro.Id"</h3>
+    }
+    <MudCard Class="mt-6">
+        <MudForm Model="@_siniestro" @ref="@_form" Validation="@(_siniestrosValidator.ValidateValue)" ValidationDelay="0">
+            <MudCardContent>
+                <MudNumericField
+                    Label="Titular ID"
+                    Placeholder="Ingrese ID del titular de la poliza"
+                    Variant="Variant.Text" Min="0"
+                    @bind-Value="_siniestro.PolizaId"
+                    For="@(() => _siniestro.PolizaId)"/>
+                <MudDatePicker 
+                    Placeholder="Ingrese fecha del suceso"
+                    Label="Fecha Suceso" 
+                    @bind-Date="_siniestro.FechaSuceso"
+                    For="@(() => _siniestro.FechaSuceso)"/>
+
+                <MudTextField
+                    Placeholder="Ingrese direccion"
+                    @bind-Value="_siniestro.Direccion"
+                    For="@(() => _siniestro.Direccion)"
+                    Immediate="true"
+                    Label="Direccion"/>
+                
+                <MudTextField
+                    Placeholder="Ingrese Descripcion"
+                    @bind-Value="_siniestro.Descripcion"
+                    For="@(() => _siniestro.Descripcion)"
+                    Immediate="true"
+                    Label="Descripcion"/>
+            </MudCardContent>
+            
+            <MudCardActions>
+                <MudButton 
+                    Variant="Variant.Filled" 
+                    Color="Color.Secondary" 
+                    DisableElevation="true" 
+                    OnClick="@(ValidarFormulario)">Validar</MudButton>
+
+                <MudButton
+                    OnClick="@(Submit)"
+                    Variant="Variant.Filled"
+                    Color="Color.Primary"
+                    Class="ml-4">Agregar!</MudButton>
+            </MudCardActions>
+        </MudForm>
+    </MudCard>
+</MudContainer>
+
+@code {
+    [Parameter] public int? Id { get; set; }
+    [Inject] ISnackbar? Snackbar { get; set; }
+    Siniestro _siniestro = new ();
+    MudForm? _form;
+    readonly SiniestrosFluentValidator _siniestrosValidator = new ();
+    bool _esNuevoSiniestro=true;
+    
+    protected override void OnParametersSet()
+    {
+        if (Id == null) return;
+        
+        var siniestroEncontrado = ObtenerSiniestro.Ejecutar(Id.Value);
+        if (siniestroEncontrado != null) _siniestro = siniestroEncontrado;
+        _esNuevoSiniestro=false;
+    }
+    
+    private void Submit()
+    {
+        _form?.Validate();
+
+        if (_form is {IsValid: false } && !ValidarFecha(_siniestro)) return;
+        
+        if (_esNuevoSiniestro)
+        {
+            _siniestro.FechaIngreso = DateTime.Now;
+            AgregarSiniestro.Ejecutar(_siniestro);
+            Snackbar?.Add("Agregado!");
+        }
+        else
+        {
+            ModificarSiniestro.Ejecutar(_siniestro);
+            Snackbar?.Add("Modificado!");
+        }
+        Navegador.NavigateTo($"/lista/siniestros/{_siniestro.Id}");
+    }
+    
+    private static bool ValidarFecha(Siniestro siniestro)
+    {
+        if (siniestro.Poliza?.FinVigencia < siniestro.FechaSuceso)
+        {
+            return false;
+        }
+        return true;
+    }
+    
+    public class SiniestrosFluentValidator : AbstractValidator<Siniestro>
+    {
+        public SiniestrosFluentValidator()
+        {
+            RuleFor(x => x.PolizaId)
+                .NotEmpty()
+                .GreaterThanOrEqualTo(1);
+
+            RuleFor(x => x)
+                .Must(ValidarFecha)
+                .WithMessage("La fecha del siniestro debe ser anterior al vencimiento de Poliza");;
+
+            RuleFor(x => x.Direccion)
+                .NotEmpty()
+                .Length(1, 30);
+            
+            RuleFor(x => x.Descripcion)
+                .NotEmpty()
+                .Length(1, 500);
+        }
+        
+        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+        {
+            var result = await ValidateAsync(ValidationContext<Siniestro>.CreateWithOptions((Siniestro)model, x => x.IncludeProperties(propertyName)));
+            if (result.IsValid)
+                return Array.Empty<string>();
+            return result.Errors.Select(e => e.ErrorMessage);
+        };
+    }
+    
+    private Task ValidarFormulario()
+    {
+        return _form?.Validate() ?? throw new InvalidOperationException();
+    }
+}

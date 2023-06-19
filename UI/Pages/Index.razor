@@ -1,0 +1,12 @@
+﻿@inject NavigationManager Navegador
+@page "/"
+
+<PageTitle>Aseguradora</PageTitle>
+
+@code
+{
+    protected override void OnInitialized()
+    {
+        Navegador.NavigateTo("/lista/titulares");
+    }
+}

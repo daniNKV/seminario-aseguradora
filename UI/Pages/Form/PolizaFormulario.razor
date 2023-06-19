@@ -1,0 +1,149 @@
+@page "/form/polizas/{Id:int?}"
+@using MudBlazor
+@using FluentValidation
+@using Aplicacion.UseCases.Polizas
+
+@inject AgregarPolizaUseCase AgregarPoliza
+@inject ModificarPolizaUseCase ModificarPoliza
+@inject ObtenerPolizaUseCase ObtenerPoliza
+@inject NavigationManager Navegador
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-2">
+    @if (_esNuevaPoliza)
+    {
+        <h3>Agregando nueva Poliza!</h3>
+    }
+    else
+    {
+        <h3>Modificando poliza de vehiculo ID: "@_poliza.VehiculoAseguradoId"</h3>
+    }
+    <MudCard Class="mt-6">
+        <MudForm Model="@_poliza" @ref="@_form" Validation="@(_polizasValidator.ValidateValue)" ValidationDelay="0">
+            <MudCardContent>
+                <MudNumericField
+                    Label="Vehiculo Asegurado"
+                    Variant="Variant.Text" Min="0"
+                    @bind-Value="_poliza.VehiculoAseguradoId"
+                    For="@(() => _poliza.VehiculoAseguradoId)"/>
+
+                <MudSelect T="string" Label="Tipo Cobertura" AnchorOrigin="Origin.BottomCenter"
+                           @bind-Value="_poliza.TipoCobertura"
+                           For="@(() => _poliza.TipoCobertura)">
+                    <MudSelectItem Value="@("Responsabilidad Civil")"/>
+                    <MudSelectItem Value="@("Franquicia")"/>
+                </MudSelect>
+
+                <MudNumericField
+                    Label="Valor Asegurado"
+                    Variant="Variant.Text" Min="0"
+                    @bind-Value="_poliza.ValorAsegurado"
+                    For="@(() => _poliza.ValorAsegurado)"/>
+
+                <MudNumericField
+                    Label="Valor Franquicia"
+                    Variant="Variant.Text" Min="0"
+                    @bind-Value="_poliza.Franquicia"
+                    For="@(() => _poliza.Franquicia)"/>
+
+                @*
+                <MudDatePicker Label="Inicio Vigencia" @bind-Date="@_poliza.InicioVigencia"/>
+                *@
+                <MudDatePicker Label="Fin Vigencia" @bind-Date="@_poliza.FinVigencia"/>
+
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton 
+                    Variant="Variant.Filled" 
+                    Color="Color.Secondary" 
+                    DisableElevation="true" 
+                    OnClick="@(ValidarFormulario)">Validar</MudButton>
+
+                <MudButton
+                    OnClick="@(Submit)"
+                    Variant="Variant.Filled"
+                    Color="Color.Primary"
+                    Class="ml-4">Agregar!</MudButton>
+
+            </MudCardActions>
+        </MudForm>
+    </MudCard>
+
+</MudContainer>
+
+@code {
+    [Parameter] public int? Id { get; set; }
+    [Inject] ISnackbar? Snackbar { get; set; }
+    Poliza _poliza = new ();
+    MudForm? _form;
+    readonly PolizasFluentValidator _polizasValidator = new ();
+    bool _esNuevaPoliza=true;
+    
+    protected override void OnParametersSet()
+    {
+        if (Id == null) return;
+        
+        var polizaEncontrada = ObtenerPoliza.Ejecutar(Id.Value);
+        if (polizaEncontrada != null) _poliza = polizaEncontrada;
+        _esNuevaPoliza=false;
+    }
+    private void Submit()
+    {
+        _form?.Validate();
+        if (_form is {IsValid: false }) return;
+        
+        if (_esNuevaPoliza)
+        {
+            _poliza.InicioVigencia = DateTime.Now;
+            AgregarPoliza.Ejecutar(_poliza);
+            Snackbar?.Add("Agregado!");
+        }
+        else
+        {
+            ModificarPoliza.Ejecutar(_poliza);
+            Snackbar?.Add("Modificado!");
+        }
+        Navegador.NavigateTo($"/lista/polizas/{_poliza.Id}");
+    }
+    
+    public class PolizasFluentValidator : AbstractValidator<Poliza>
+    {
+        public PolizasFluentValidator()
+        {
+            RuleFor(x => x.VehiculoAseguradoId)
+                .NotEmpty()
+                .GreaterThanOrEqualTo(1);
+
+            RuleFor(x => x.TipoCobertura)
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty()
+                .Length(1, 30);
+
+            RuleFor(x => x.ValorAsegurado)
+                .NotEmpty()
+                .GreaterThan(0);
+
+            RuleFor(x => x.Franquicia)
+                .NotEmpty()
+                .GreaterThanOrEqualTo(1);
+
+            // RuleFor(x => x.InicioVigencia)
+            //     .NotEmpty();
+
+            RuleFor(x => x.FinVigencia)
+                .NotEmpty();
+
+        }
+
+        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+        {
+            var result = await ValidateAsync(ValidationContext<Poliza>.CreateWithOptions((Poliza)model, x => x.IncludeProperties(propertyName)));
+            if (result.IsValid)
+                return Array.Empty<string>();
+            return result.Errors.Select(e => e.ErrorMessage);
+        };
+    }
+    private Task ValidarFormulario()
+    {
+        return _form?.Validate() ?? throw new InvalidOperationException();
+    }
+}
