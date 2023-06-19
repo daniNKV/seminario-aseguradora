@@ -21,17 +21,12 @@
 Descomprimir archivo .zip
 ```
 
-Ubicarse en la raíz del proyecto 
+Ubicarse en la raíz del proyecto y entrar en la carpeta UI
 ```
-cd aseguradora
+cd aseguradora/UI
 ```
 
 Correr el proyecto
 ```
 dotnet run
 ```
-
-## Usage <a name = "usage"></a>
-
-En el programa principal, dentro de consola, se encuentran detallados los casos de usos y se procede a ejecutar a modo demonstración
-diversos módulos del proyecto.
