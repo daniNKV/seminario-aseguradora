@@ -1,0 +1,144 @@
+@page "/form/terceros/{Id:int?}"
+@using MudBlazor
+@using Aplicacion.UseCases.Terceros
+
+@inject AgregarTerceroUseCase AgregarTercero
+@inject ModificarTerceroUseCase ModificarTercero
+@inject ObtenerTerceroUseCase ObtenerTercero
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-2">
+    @if (_esNuevoTercero)
+    {
+        <h3>Agregando nuevo Tercero!</h3>
+    }
+    else
+    {
+        <h3>Modificando Tercero ID: "@_tercero.Id"</h3>
+    }
+    <MudCard Class="mt-6">
+        <MudForm Model="@_tercero" @ref="@_form" Validation="@(_tercerosValidator.ValidateValue)" ValidationDelay="0">
+            <MudCardContent>
+                <MudNumericField
+                    Label="Siniestro ID"
+                    Variant="Variant.Text" Min="0"
+                    @bind-Value="_tercero.SiniestroId"
+                    For="@(() => _tercero.SiniestroId)"/>
+
+                <MudTextField
+                    @bind-Value="_tercero.Nombre"
+                    For="@(() => _tercero.Nombre)"
+                    Immediate="true"
+                    Label="Nombre"/>
+
+                <MudTextField
+                    @bind-Value="_tercero.Apellido"
+                    For="@(() => _tercero.Apellido)"
+                    Immediate="true"
+                    Label="Apellido"/>
+
+                <MudNumericField
+                    Label="DNI"
+                    Variant="Variant.Text" Min="0"
+                    @bind-Value="_tercero.Dni"
+                    For="@(() => _tercero.Dni)"/>
+
+                <MudTextField
+                    @bind-Value="_tercero.Telefono"
+                    For="@(() => _tercero.Telefono)"
+                    Immediate="true"
+                    Label="Telefono"/>
+                
+                <MudTextField
+                    @bind-Value="_tercero.Aseguradora"
+                    For="@(() => _tercero.Aseguradora)"
+                    Immediate="true"
+                    Label="Aseguradora"/>
+            </MudCardContent>
+            
+            <MudCardActions>
+                <MudButton
+                    Variant="Variant.Filled"
+                    Color="Color.Secondary"
+                    DisableElevation="true"
+                    OnClick="@(() => _form.Validate())">Validar</MudButton>
+                <MudButton
+                    OnClick="@(Submit)"
+                    Variant="Variant.Filled"
+                    Color="Color.Primary"
+                    Class="ml-4">
+                    Agregar!</MudButton>
+
+            </MudCardActions>
+        </MudForm>
+    </MudCard>
+
+</MudContainer>
+
+@code {
+    [Parameter] public int? Id { get; set; }
+    [Inject] ISnackbar Snackbar { get; set; }
+    Tercero? _tercero = new ();
+    MudForm _form;
+    readonly TercerosFluentValidator _tercerosValidator = new ();
+    bool _esNuevoTercero=true;
+    
+    protected override void OnParametersSet()
+    {
+        if (Id == null) return;
+        
+        var terceroEncontrado = ObtenerTercero.Ejecutar(Id.Value);
+        _tercero = terceroEncontrado;
+        _esNuevoTercero=false;
+    }
+    private void Submit()
+    {
+        _form.Validate();
+
+        if (!_form.IsValid) return;
+        
+        if (_esNuevoTercero)
+        {
+            AgregarTercero.Ejecutar(_tercero);
+            Snackbar?.Add("Agregado!");
+        }
+        else
+        {
+            ModificarTercero.Ejecutar(_tercero);
+            Snackbar?.Add("Modificado!");
+        }
+    }
+    
+    public class TercerosFluentValidator : AbstractValidator<Tercero>
+    {
+        public TercerosFluentValidator()
+        {
+            RuleFor(x => x.SiniestroId)
+                .NotEmpty()
+                .GreaterThanOrEqualTo(1);
+            
+            RuleFor(x => x.Nombre)
+                .NotEmpty()
+                .Length(1, 30);
+
+            RuleFor(x => x.Apellido)
+                .NotEmpty()
+                .Length(1, 30);
+
+            RuleFor(x => x.Dni)
+                .NotEmpty()
+                .GreaterThanOrEqualTo(1);
+
+            RuleFor(x => x.Telefono)
+                .NotEmpty()
+                .Length(1, 10);
+        }
+
+        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+        {
+            var result = await ValidateAsync(ValidationContext<Tercero>.CreateWithOptions((Tercero)model, x => x.IncludeProperties(propertyName)));
+            if (result.IsValid)
+                return Array.Empty<string>();
+            return result.Errors.Select(e => e.ErrorMessage);
+        };
+    }
+}

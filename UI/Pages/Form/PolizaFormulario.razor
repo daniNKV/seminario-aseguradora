@@ -103,7 +103,7 @@
         {
             RuleFor(x => x.VehiculoAseguradoId)
                 .NotEmpty()
-                .GreaterThan(0);
+                .GreaterThanOrEqualTo(1);
 
             RuleFor(x => x.TipoCobertura)
                 .Cascade(CascadeMode.Stop)
@@ -116,7 +116,7 @@
 
             RuleFor(x => x.Franquicia)
                 .NotEmpty()
-                .GreaterThan(0);
+                .GreaterThanOrEqualTo(1);
 
             RuleFor(x => x.InicioVigencia)
                 .NotEmpty();
@@ -125,7 +125,6 @@
                 .NotEmpty();
 
         }
-        
 
         public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
         {
@@ -135,10 +134,4 @@
             return result.Errors.Select(e => e.ErrorMessage);
         };
     }
-
-    
-    }
-
-
-
 }

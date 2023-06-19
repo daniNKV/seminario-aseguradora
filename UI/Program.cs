@@ -30,6 +30,8 @@ builder.Services.AddTransient<EliminarPolizaUseCase>();
 builder.Services.AddTransient<ModificarPolizaUseCase>();
 builder.Services.AddTransient<ObtenerPolizaUseCase>();
 builder.Services.AddTransient<ObtenerPolizaDeVehiculoUseCase>();
+builder.Services.AddTransient<ObtenerPolizaDeSiniestroUseCase>();
+
 builder.Services.AddScoped<IRepositorioPoliza, RepositorioPolizaSqLite>();
 
 // Asegurables

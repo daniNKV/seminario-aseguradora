@@ -1,0 +1,125 @@
+@page "/form/vehiculos/{Id:int?}"
+@using MudBlazor
+@using Aplicacion.UseCases.Vehiculos
+
+@inject AgregarVehiculoUseCase AgregarVehiculo
+@inject ModificarVehiculoUseCase ModificarVehiculo
+@inject ObtenerVehiculoUseCase ObtenerVehiculo
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-2">
+    @if (_esNuevoVehiculo)
+    {
+        <h3>Agregando nuevo Vehiculo!</h3>
+    }
+    else
+    {
+        <h3>Modificando Vehiculo ID: "@_vehiculo.Id"</h3>
+    }
+    <MudCard Class="mt-6">
+        <MudForm Model="@_vehiculo" @ref="@_form" Validation="@(_vehiculosValidator.ValidateValue)" ValidationDelay="0">
+            <MudCardContent>
+                <MudNumericField
+                    Label="Titular ID"
+                    Variant="Variant.Text" Min="0"
+                    @bind-Value="_vehiculo.TitularId"
+                    For="@(() => _vehiculo.TitularId)"/>
+
+                <MudTextField
+                    @bind-Value="_vehiculo.Dominio"
+                    For="@(() => _vehiculo.Dominio)"
+                    Immediate="true"
+                    Label="Dominio"/>
+                
+                <MudTextField
+                    @bind-Value="_vehiculo.Marca"
+                    For="@(() => _vehiculo.Marca)"
+                    Immediate="true"
+                    Label="Marca"/>
+
+
+                <MudTextField
+                    @bind-Value="_vehiculo.Fabricacion"
+                    For="@(() => _vehiculo.Fabricacion)"
+                    Immediate="true"
+                    Label="Fabricacion"/>
+
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary" DisableElevation="true" OnClick="@(() => _form.Validate())">Validar</MudButton>
+
+                <MudButton
+                    OnClick="@(Submit)"
+                    Variant="Variant.Filled"
+                    Color="Color.Primary"
+                    Class="ml-4">Agregar!</MudButton>
+
+            </MudCardActions>
+        </MudForm>
+    </MudCard>
+
+</MudContainer>
+
+@code {
+    [Parameter] public int? Id { get; set; }
+    [Inject] ISnackbar Snackbar { get; set; }
+    Vehiculo? _vehiculo = new ();
+    MudForm _form;
+    readonly VehiculosFluentValidator _vehiculosValidator = new ();
+    bool _esNuevoVehiculo=true;
+    
+    protected override void OnParametersSet()
+    {
+        if (Id == null) return;
+        
+        var vehiculoEncontrado = ObtenerVehiculo.Ejecutar(Id.Value);
+        _vehiculo = vehiculoEncontrado;
+        _esNuevoVehiculo=false;
+    }
+    private void Submit()
+    {
+        _form.Validate();
+
+        if (!_form.IsValid) return;
+        
+        if (_esNuevoVehiculo)
+        {
+            AgregarVehiculo.Ejecutar(_vehiculo);
+            Snackbar?.Add("Agregado!");
+        }
+        else
+        {
+            ModificarVehiculo.Ejecutar(_vehiculo);
+            Snackbar?.Add("Modificado!");
+        }
+    }
+    
+    public class VehiculosFluentValidator : AbstractValidator<Vehiculo>
+    {
+        public VehiculosFluentValidator()
+        {
+            RuleFor(x => x.TitularId)
+                .NotEmpty()
+                .GreaterThan(1);
+
+            RuleFor(x => x.Dominio)
+                .NotEmpty()
+                .Length(1, 30);
+
+            RuleFor(x => x.Marca)
+                .NotEmpty()
+                .Length(1, 30);
+            
+            RuleFor(x => x.Fabricacion)
+                .NotEmpty()
+                .Length(1, 50);
+
+        }
+        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+        {
+            var result = await ValidateAsync(ValidationContext<Vehiculo>.CreateWithOptions((Vehiculo)model, x => x.IncludeProperties(propertyName)));
+            if (result.IsValid)
+                return Array.Empty<string>();
+            return result.Errors.Select(e => e.ErrorMessage);
+        };
+    }
+}
