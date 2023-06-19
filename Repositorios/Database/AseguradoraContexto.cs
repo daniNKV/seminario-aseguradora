@@ -25,6 +25,13 @@ public class AseguradoraContexto : DbContext
             .WithOne(v => v.Titular)
             .HasForeignKey(v => v.TitularId)
             .OnDelete(DeleteBehavior.Cascade);;
+        
+        modelBuilder.Entity<Siniestro>()
+            .HasMany(s => s.Terceros)
+            .WithOne(t => t.Siniestro)
+            .HasForeignKey(v => v.SiniestroId)
+            .OnDelete(DeleteBehavior.Cascade);;
+
 
     }
     
