@@ -26,12 +26,12 @@ public class RepositorioPolizaSqLite : IRepositorioPoliza
     public void Eliminar(int id)
     {
         using var context = new AseguradoraContexto();
-        var polizaAEliminar = context.Polizas.FirstOrDefault(t => t.Id == id);
+        var polizaAEliminar = context.Polizas.Include(p => p.VehiculoAsegurado).FirstOrDefault(t => t.Id == id);
         if (polizaAEliminar != null)
         {
             context.Polizas.Remove(polizaAEliminar);
+            context.SaveChanges();
         } 
-        context.SaveChanges();
 
     }    
 

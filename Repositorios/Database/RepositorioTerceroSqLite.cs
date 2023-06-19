@@ -24,7 +24,15 @@ public class RepositorioTerceroSqLite : IRepositorioTercero
 
     public void Eliminar(int id)
     {
-        throw new NotImplementedException();
+        using var context = new AseguradoraContexto();
+        
+        var terceroAEliminar = context.Terceros.FirstOrDefault(t => t.Id == id);
+        Console.WriteLine(terceroAEliminar);
+        if (terceroAEliminar != null)
+        {
+            context.Terceros.Remove(terceroAEliminar);
+            context.SaveChanges();
+        }
     }
 
     public void Modificar(Tercero elemento)

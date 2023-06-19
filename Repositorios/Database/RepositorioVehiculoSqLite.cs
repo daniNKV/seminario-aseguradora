@@ -27,12 +27,14 @@ public class RepositorioVehiculoSqLite : IRepositorioVehiculo
     {
         using var context = new AseguradoraContexto();
         
-        var vehiculoAEliminar = context.Titulares.FirstOrDefault(t => t.Id == id);
+        var vehiculoAEliminar = context.Vehiculos.FirstOrDefault(t => t.Id == id);
         if (vehiculoAEliminar != null)
-        {
-            context.Titulares.Remove(vehiculoAEliminar);
+        {   
+            Console.WriteLine("Eliminando vehiculo...");
+            Console.WriteLine($"{vehiculoAEliminar}");
+            context.Vehiculos.Remove(vehiculoAEliminar);
             context.SaveChanges();
-        }    
+        }
     }
 
     public void Modificar(Vehiculo elemento)

@@ -26,7 +26,7 @@ public class RepositorioTitularSqLite : IRepositorioTitular
     {
         using var context = new AseguradoraContexto();
         
-        var titularAEliminar = context.Titulares.FirstOrDefault(t => t.Id == id);
+        var titularAEliminar = context.Titulares.Include(t => t.ItemsAsegurados).FirstOrDefault(t => t.Id == id);
         if (titularAEliminar != null)
         {
             context.Titulares.Remove(titularAEliminar);
