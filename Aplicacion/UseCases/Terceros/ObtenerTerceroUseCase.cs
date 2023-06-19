@@ -8,7 +8,7 @@ public class ObtenerTerceroUseCase : UseCase<IRepositorioTercero>
     public ObtenerTerceroUseCase(IRepositorioTercero repositorio) : base(repositorio)
     {
     }
-    public Tercero Ejecutar(int id)
+    public Tercero? Ejecutar(int id)
     {
         return Repositorio.Obtener(id);
     }

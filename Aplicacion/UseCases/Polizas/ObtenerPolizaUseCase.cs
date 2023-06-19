@@ -8,7 +8,7 @@ public class ObtenerPolizaUseCase : UseCase<IRepositorioPoliza>
     public ObtenerPolizaUseCase(IRepositorioPoliza repositorio) : base(repositorio)
     {
     }
-    public Poliza Ejecutar(int id)
+    public Poliza? Ejecutar(int id)
     {
         return Repositorio.Obtener(id);
     }

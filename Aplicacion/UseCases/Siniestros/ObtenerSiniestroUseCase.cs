@@ -8,7 +8,7 @@ public class ObtenerSiniestroUseCase : UseCase<IRepositorioSiniestro>
     public ObtenerSiniestroUseCase(IRepositorioSiniestro repositorio) : base(repositorio)
     {
     }
-    public Siniestro Ejecutar(int id)
+    public Siniestro? Ejecutar(int id)
     {
         return Repositorio.Obtener(id);
     }
